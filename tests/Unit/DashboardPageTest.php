@@ -9,6 +9,6 @@ test('the dashboard page includes a dummy form with NeoBrutalismCSS classes', fu
         ->toContain('class="nb-dropdown"')
         ->toContain('class="nb-textarea default"')
         ->toContain('class="nb-checkbox default"')
-        ->toContain('class="nb-button default"')
+        ->toContain('class="nb-button orange"')
         ->toContain('@submit.prevent');
 });

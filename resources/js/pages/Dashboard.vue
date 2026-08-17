@@ -103,7 +103,7 @@ defineOptions({
                 </label>
             </div>
 
-            <button type="submit" class="nb-button default">Save ping</button>
+            <button type="submit" class="nb-button orange">Save ping</button>
         </form>
     </div>
 </template>
