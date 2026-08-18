@@ -1,0 +1,2 @@
+ignored:
+  - DL3008 # Pin apt package versions — impractical for Debian base images

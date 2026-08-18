@@ -16,11 +16,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Install masscan from source for the latest version
-RUN git clone https://github.com/robertdavidgraham/masscan /tmp/masscan \
-    && cd /tmp/masscan \
+WORKDIR /tmp/masscan
+RUN git clone https://github.com/robertdavidgraham/masscan . \
     && make -j"$(nproc)" \
     && make install \
     && rm -rf /tmp/masscan
+
+WORKDIR /var/www/html
 
 # Install PHP extensions required by Laravel
 RUN docker-php-ext-install pdo pdo_mysql mbstring zip pcntl
@@ -30,8 +32,6 @@ RUN pecl install redis && docker-php-ext-enable redis
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-WORKDIR /var/www/html
 
 # Copy application code
 COPY . .

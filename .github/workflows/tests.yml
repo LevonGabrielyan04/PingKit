@@ -53,5 +53,12 @@ jobs:
           npm run biome:check
           npm run types:check
 
+      - name: Lint Dockerfiles
+        uses: hadolint/hadolint-action@2332a7b74a6de0dda2e2221d575162eba76ba5e5 # v3.3.0
+        with:
+          dockerfile: .
+          recursive: true
+          failure-threshold: warning
+
       - name: Run Tests
         run: php artisan test
