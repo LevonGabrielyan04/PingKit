@@ -1,14 +1,11 @@
 <?php
 
-test('the dashboard page includes a dummy form with NeoBrutalismCSS classes', function () {
+test('the dashboard page does not include dummy starter content', function () {
     $page = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/Dashboard.vue');
 
     expect($page)
-        ->toContain('data-test="dummy-ping-form"')
-        ->toContain('class="nb-input default"')
-        ->toContain('class="nb-dropdown"')
-        ->toContain('class="nb-textarea default"')
-        ->toContain('class="nb-checkbox default"')
-        ->toContain('class="nb-button orange"')
-        ->toContain('@submit.prevent');
+        ->not->toContain('PlaceholderPattern')
+        ->not->toContain('data-test="dummy-ping-form"')
+        ->not->toContain('Dummy form for UI preview')
+        ->toContain('Head title="Dashboard"');
 });
