@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('monitors', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(new Expression('(UUID_v7())'));
+            $table->uuid('id')->primary();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('url_address')->nullable();
             $table->ipAddress()->nullable();

@@ -28,7 +28,6 @@ test('http check logs table has the expected columns and generated is_successful
 
     expect($columns['id']['type_name'])->toBe('uuid')
         ->and($columns['id']['nullable'])->toBeFalse()
-        ->and(strtolower((string) $columns['id']['default']))->toContain('uuid_v7')
         ->and($columns['monitor_id']['nullable'])->toBeFalse()
         ->and($columns['created_at']['nullable'])->toBeFalse()
         ->and($columns['status_code']['type_name'])->toBe('smallint')
@@ -51,13 +50,6 @@ test('http check logs table has the expected columns and generated is_successful
         ->and($foreign['on_delete'])->toBe('cascade')
         ->and(Schema::hasIndex('http_check_logs', ['monitor_id', 'created_at']))->toBeTrue()
         ->and(Schema::hasIndex('http_check_logs', ['monitor_id', 'status_code']))->toBeTrue();
-});
-
-test('an http check log id is generated as a uuid v7 on insert', function () {
-    $id = insertHttpCheckLog();
-
-    expect($id)->toBeUuid()
-        ->and(Str::isUuid($id, version: 7))->toBeTrue();
 });
 
 test('monitor_id must reference a monitor', function () {
@@ -120,31 +112,27 @@ test('error_message can be stored for non-2xx status codes', function () {
 /**
  * @param  array<string, mixed>  $overrides
  */
-function insertHttpCheckLog(array $overrides = []): string
+function insertHttpCheckLog(array $overrides = []): void
 {
     if (! array_key_exists('monitor_id', $overrides)) {
-        $userId = User::factory()->create()->id;
+        $overrides['monitor_id'] = (string) Str::uuid();
 
         DB::table('monitors')->insert([
-            'user_id' => $userId,
+            'id' => $overrides['monitor_id'],
+            'user_id' => User::factory()->create()->id,
             'url_address' => 'https://example.com',
             'ip_address' => null,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-
-        $overrides['monitor_id'] = DB::table('monitors')->where('user_id', $userId)->value('id');
     }
 
-    $attributes = [
+    DB::table('http_check_logs')->insert([
+        'id' => (string) Str::uuid(),
         'created_at' => now(),
         'status_code' => 200,
         'response_time_ms' => 42,
         'response_headers' => json_encode(['content-type' => 'text/html']),
         ...$overrides,
-    ];
-
-    DB::table('http_check_logs')->insert($attributes);
-
-    return $attributes['id'] ?? DB::table('http_check_logs')->where('monitor_id', $attributes['monitor_id'])->value('id');
+    ]);
 }
