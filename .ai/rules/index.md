@@ -6,3 +6,4 @@ Before planning or editing, find the row whose globs match the file's path and r
 | --- | --- |
 | phpunit.xml | .ai/rules/general.md |
 | resources/js/**/*.{ts,vue}, resources/js/**/* | .ai/rules/js.md |
+| database/migrations/** | .ai/rules/migrations.md |
