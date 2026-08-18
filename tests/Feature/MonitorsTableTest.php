@@ -23,6 +23,7 @@ test('monitors table has the expected columns', function () {
 
     expect($columns['id']['type_name'])->toBe('uuid')
         ->and($columns['id']['nullable'])->toBeFalse()
+        ->and(strtolower((string) $columns['id']['default']))->toContain('uuid_v7')
         ->and($columns['user_id']['type_name'])->toBe('bigint')
         ->and($columns['user_id']['nullable'])->toBeFalse()
         ->and($columns['url_address']['type_name'])->toBe('varchar')
@@ -39,6 +40,13 @@ test('monitors table has the expected columns', function () {
         ->and($foreign['foreign_columns'])->toBe(['id'])
         ->and($foreign['on_delete'])->toBe('cascade')
         ->and(Schema::hasIndex('monitors', ['updated_at']))->toBeTrue();
+});
+
+test('a monitor id is generated as a uuid v7 on insert', function () {
+    $id = insertMonitor();
+
+    expect($id)->toBeUuid()
+        ->and(Str::isUuid($id, version: 7))->toBeTrue();
 });
 
 test('a monitor can be stored with a url address', function () {
@@ -98,20 +106,19 @@ test('request_headers can be stored as json', function () {
  */
 function insertMonitor(array $overrides = []): string
 {
-    $id = $overrides['id'] ?? (string) Str::uuid();
-
     if (! array_key_exists('user_id', $overrides)) {
         $overrides['user_id'] = User::factory()->create()->id;
     }
 
-    DB::table('monitors')->insert([
-        'id' => $id,
+    $attributes = [
         'url_address' => 'https://example.com',
         'ip_address' => null,
         'created_at' => now(),
         'updated_at' => now(),
         ...$overrides,
-    ]);
+    ];
 
-    return $id;
+    DB::table('monitors')->insert($attributes);
+
+    return $attributes['id'] ?? DB::table('monitors')->where('user_id', $attributes['user_id'])->value('id');
 }
