@@ -11,3 +11,7 @@ parameters:
         - routes/
 
     level: 7
+
+    checkModelAppends: true
+    noEnvCallsOutsideOfConfig: true
+    noModelMake: true

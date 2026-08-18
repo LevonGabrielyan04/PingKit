@@ -65,10 +65,16 @@
             "Composer\\Config::disableProcessTimeout",
             "npm run biome:check",
             "npm run types:check",
-            "@test"
+            "@lint:check",
+            "@phpstan",
+            "@php artisan config:clear --ansi",
+            "@php artisan test"
+        ],
+        "phpstan": [
+            "phpstan analyse --memory-limit=512M"
         ],
         "types:check": [
-            "phpstan analyse"
+            "@phpstan"
         ],
         "test": [
             "@php artisan config:clear --ansi",

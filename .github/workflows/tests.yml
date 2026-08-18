@@ -34,5 +34,16 @@ jobs:
       - name: Setup Application
         run: composer setup
 
-      - name: Run CI Checks
-        run: composer ci:check
+      - name: Run Pint
+        run: composer lint:check
+
+      - name: Run PHPStan
+        run: composer phpstan
+
+      - name: Run Frontend Checks
+        run: |
+          npm run biome:check
+          npm run types:check
+
+      - name: Run Tests
+        run: php artisan test
