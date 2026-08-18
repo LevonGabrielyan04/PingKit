@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+import PingTable from '@/components/PingTable.vue';
 import { dashboard } from '@/routes';
 
 defineOptions({
@@ -17,7 +18,5 @@ defineOptions({
 <template>
     <Head title="Dashboard" />
 
-    <div
-        class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4"
-    />
+    <PingTable />
 </template>

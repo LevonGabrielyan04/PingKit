@@ -7,5 +7,6 @@ test('the dashboard page does not include dummy starter content', function () {
         ->not->toContain('PlaceholderPattern')
         ->not->toContain('data-test="dummy-ping-form"')
         ->not->toContain('Dummy form for UI preview')
-        ->toContain('Head title="Dashboard"');
+        ->toContain('Head title="Dashboard"')
+        ->toContain('PingTable');
 });

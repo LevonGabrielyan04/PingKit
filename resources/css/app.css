@@ -170,3 +170,9 @@
         @apply bg-background text-foreground;
     }
 }
+
+@layer utilities {
+    .project-color-theme {
+        color: orange;
+    }
+}
