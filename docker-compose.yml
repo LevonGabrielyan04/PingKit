@@ -82,6 +82,7 @@ services:
       MARIADB_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-rootsecret}"
     volumes:
       - db_data:/var/lib/mysql
+      - ./docker/mariadb/create-testing-database.sh:/docker-entrypoint-initdb.d/create-testing-database.sh:ro
 
 volumes:
   valkey_data:

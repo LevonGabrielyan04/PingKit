@@ -4,4 +4,5 @@ Before planning or editing, find the row whose globs match the file's path and r
 
 | Applies to | Rule file |
 | --- | --- |
+| phpunit.xml | .ai/rules/general.md |
 | resources/js/**/*.{ts,vue}, resources/js/**/* | .ai/rules/js.md |

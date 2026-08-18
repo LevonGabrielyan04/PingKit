@@ -13,6 +13,33 @@ jobs:
   ci:
     runs-on: ubuntu-latest
 
+    env:
+      DB_CONNECTION: mariadb
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: pingkit_testing
+      DB_USERNAME: laravel
+      DB_PASSWORD: password
+      SESSION_DRIVER: array
+      CACHE_STORE: array
+      QUEUE_CONNECTION: sync
+
+    services:
+      mariadb:
+        image: mariadb:12.3.2
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: pingkit_testing
+          MARIADB_USER: laravel
+          MARIADB_PASSWORD: password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -23,6 +50,7 @@ jobs:
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
         with:
           php-version: '8.5'
+          extensions: mbstring, pdo_mysql
           tools: composer:v2
           coverage: none
 
@@ -32,15 +60,7 @@ jobs:
           node-version: '24'
 
       - name: Setup Application
-        env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: database/database.sqlite
-          SESSION_DRIVER: array
-          CACHE_STORE: array
-          QUEUE_CONNECTION: sync
-        run: |
-          touch database/database.sqlite
-          composer setup
+        run: composer setup
 
       - name: Run Pint
         run: composer lint:check
