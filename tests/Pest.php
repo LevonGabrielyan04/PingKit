@@ -44,7 +44,12 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function validPassword(): string
 {
-    // ..
+    return 'SecureTestPass123!';
+}
+
+function validPasswordForTwoFactorUser(): string
+{
+    return 'TestPass1!';
 }
