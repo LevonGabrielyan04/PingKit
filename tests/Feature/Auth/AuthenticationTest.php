@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Laravel\Fortify\Features;
 
 test('login screen can be rendered', function () {
@@ -66,7 +67,7 @@ test('users can logout', function () {
 test('users are rate limited', function () {
     $user = User::factory()->create();
 
-    RateLimiter::increment(md5('login'.implode('|', [$user->email, '127.0.0.1'])), amount: 5);
+    RateLimiter::increment(md5('login'.Str::transliterate(Str::lower($user->email))), amount: 5);
 
     $response = $this->post(route('login.store'), [
         'email' => $user->email,
