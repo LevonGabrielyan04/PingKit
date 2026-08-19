@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\HttpMethod;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('url_address')->nullable();
             $table->ipAddress()->nullable();
+            $table->unsignedTinyInteger('request_method')->default(HttpMethod::Get);
             $table->json('request_headers')->nullable();
             $table->timestamps();
 

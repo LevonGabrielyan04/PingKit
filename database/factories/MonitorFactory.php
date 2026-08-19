@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\HttpMethod;
 use App\Models\Monitor;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -22,6 +23,7 @@ class MonitorFactory extends Factory
             'user_id' => User::factory(),
             'url_address' => fake()->url(),
             'ip_address' => null,
+            'request_method' => HttpMethod::Get,
             'request_headers' => null,
         ];
     }

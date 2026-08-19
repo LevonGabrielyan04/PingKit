@@ -16,6 +16,7 @@ test('monitors table has the expected columns', function () {
         'user_id',
         'url_address',
         'ip_address',
+        'request_method',
         'request_headers',
         'created_at',
         'updated_at',
@@ -29,6 +30,9 @@ test('monitors table has the expected columns', function () {
         ->and($columns['url_address']['nullable'])->toBeTrue()
         ->and($columns['ip_address']['type_name'])->toBe('varchar')
         ->and($columns['ip_address']['nullable'])->toBeTrue()
+        ->and($columns['request_method']['type_name'])->toBe('tinyint')
+        ->and($columns['request_method']['nullable'])->toBeFalse()
+        ->and($columns['request_method']['type'])->toContain('unsigned')
         ->and($columns['request_headers']['nullable'])->toBeTrue();
 
     $primary = collect(Schema::getIndexes('monitors'))->firstWhere('primary', true);

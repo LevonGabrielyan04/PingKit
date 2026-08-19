@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\HttpMethod;
 use App\Models\Monitor;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -27,4 +28,25 @@ test('a monitor can target an ip address', function () {
 
     expect($monitor->url_address)->toBeNull()
         ->and($monitor->ip_address)->toBe('192.0.2.1');
+});
+
+test('a monitor casts request_method to the http method enum', function () {
+    $monitor = Monitor::factory()->create([
+        'request_method' => HttpMethod::Post,
+    ]);
+
+    $monitor->refresh();
+
+    expect($monitor->request_method)->toBe(HttpMethod::Post);
+
+    $this->assertDatabaseHas(Monitor::class, [
+        'id' => $monitor->id,
+        'request_method' => HttpMethod::Post->value,
+    ]);
+});
+
+test('a monitor defaults request_method to get', function () {
+    $monitor = Monitor::factory()->create();
+
+    expect($monitor->request_method)->toBe(HttpMethod::Get);
 });
