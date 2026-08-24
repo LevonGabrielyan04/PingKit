@@ -18,6 +18,7 @@ test('monitors table has the expected columns', function () {
         'ip_address',
         'request_method',
         'request_headers',
+        'is_httpable',
         'created_at',
         'updated_at',
     ]);
@@ -33,7 +34,10 @@ test('monitors table has the expected columns', function () {
         ->and($columns['request_method']['type_name'])->toBe('tinyint')
         ->and($columns['request_method']['nullable'])->toBeFalse()
         ->and($columns['request_method']['type'])->toContain('unsigned')
-        ->and($columns['request_headers']['nullable'])->toBeTrue();
+        ->and($columns['request_headers']['nullable'])->toBeTrue()
+        ->and($columns['is_httpable']['type_name'])->toBe('tinyint')
+        ->and($columns['is_httpable']['nullable'])->toBeFalse()
+        ->and($columns['is_httpable']['default'])->toBe('1');
 
     $primary = collect(Schema::getIndexes('monitors'))->firstWhere('primary', true);
     $foreign = collect(Schema::getForeignKeys('monitors'))->firstWhere('columns', ['user_id']);
@@ -42,7 +46,16 @@ test('monitors table has the expected columns', function () {
         ->and($foreign['foreign_table'])->toBe('users')
         ->and($foreign['foreign_columns'])->toBe(['id'])
         ->and($foreign['on_delete'])->toBe('cascade')
+        ->and(Schema::hasIndex('monitors', ['is_httpable']))->toBeTrue()
         ->and(Schema::hasIndex('monitors', ['updated_at']))->toBeTrue();
+});
+
+test('is_httpable defaults to true when omitted', function () {
+    $id = insertMonitor();
+
+    $monitor = DB::table('monitors')->where('id', $id)->sole();
+
+    expect((bool) $monitor->is_httpable)->toBeTrue();
 });
 
 test('a monitor can be stored with a url address', function () {

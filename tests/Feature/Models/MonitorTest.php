@@ -50,3 +50,9 @@ test('a monitor defaults request_method to get', function () {
 
     expect($monitor->request_method)->toBe(HttpMethod::Get);
 });
+
+test('a monitor defaults is_httpable to true', function () {
+    $monitor = Monitor::factory()->create();
+
+    expect($monitor->is_httpable)->toBeTrue();
+});

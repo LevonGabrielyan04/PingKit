@@ -19,10 +19,11 @@ use Illuminate\Support\Carbon;
  * @property string|null $ip_address
  * @property HttpMethod $request_method
  * @property array<string, mixed>|null $request_headers
+ * @property bool $is_httpable
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['user_id', 'url_address', 'ip_address', 'request_method', 'request_headers'])]
+#[Fillable(['user_id', 'url_address', 'ip_address', 'request_method', 'request_headers', 'is_httpable'])]
 class Monitor extends Model
 {
     /** @use HasFactory<MonitorFactory> */
@@ -33,6 +34,7 @@ class Monitor extends Model
      */
     protected $attributes = [
         'request_method' => HttpMethod::Get->value,
+        'is_httpable' => true,
     ];
 
     /**
@@ -43,6 +45,7 @@ class Monitor extends Model
         return [
             'request_method' => HttpMethod::class,
             'request_headers' => 'array',
+            'is_httpable' => 'boolean',
         ];
     }
 

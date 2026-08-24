@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import { dashboard } from '@/routes';
+import PingTable from '@/components/PingTable.vue';
+import { ping } from '@/routes';
 
 defineOptions({
     layout: {
         breadcrumbs: [
             {
-                title: 'Dashboard',
-                href: dashboard(),
+                title: 'Ping',
+                href: ping(),
             },
         ],
     },
@@ -15,5 +16,7 @@ defineOptions({
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Ping" />
+
+    <PingTable />
 </template>

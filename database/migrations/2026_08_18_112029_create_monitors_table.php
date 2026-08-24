@@ -20,8 +20,10 @@ return new class extends Migration
             $table->ipAddress()->nullable();
             $table->unsignedTinyInteger('request_method')->default(HttpMethod::Get);
             $table->json('request_headers')->nullable();
+            $table->boolean('is_httpable')->default(true);
             $table->timestamps();
 
+            $table->index('is_httpable');
             $table->index('updated_at');
         });
 

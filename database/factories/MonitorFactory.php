@@ -25,6 +25,7 @@ class MonitorFactory extends Factory
             'ip_address' => null,
             'request_method' => HttpMethod::Get,
             'request_headers' => null,
+            'is_httpable' => true,
         ];
     }
 

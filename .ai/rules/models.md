@@ -10,3 +10,6 @@ Monitor and HttpCheckLog use UUID primary keys via HasUuids (UUIDv7). Do not set
 
 ## Cast Monitor request_method to HttpMethod
 Monitor.request_method is an int-backed App\Enums\HttpMethod. Keep it in Fillable, casts(), PHPDoc, and $attributes (raw value HttpMethod::Get->value). Factory should set HttpMethod::Get.
+
+## Cast Monitor is_httpable to boolean
+Monitor.is_httpable is a boolean defaulting to true. Keep it in Fillable, casts() as boolean, PHPDoc, and $attributes (true). Factory should set true.

@@ -10,3 +10,6 @@ The monitors table uses a UUID primary key (`uuid('id')->primary()`), a required
 
 ## Monitor request_method is unsigned tinyint
 monitors.request_method is an unsigned tinyint with default HttpMethod::Get (1). Do not use a native SQL ENUM or string column. Cast it on the Monitor model to App\Enums\HttpMethod.
+
+## Monitor is_httpable boolean with index
+monitors.is_httpable is a non-nullable boolean defaulting to true, with an index. Mirror the default in Monitor $attributes and cast it to boolean. Keep it in Fillable and the factory.

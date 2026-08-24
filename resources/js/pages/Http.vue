@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import { dashboard } from '@/routes';
+import { http } from '@/routes';
 
 defineOptions({
     layout: {
         breadcrumbs: [
             {
-                title: 'Dashboard',
-                href: dashboard(),
+                title: 'Http',
+                href: http(),
             },
         ],
     },
@@ -15,5 +15,5 @@ defineOptions({
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Http" />
 </template>
