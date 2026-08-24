@@ -24,4 +24,16 @@ interface MonitorRepositoryInterface
      * @param  array<string, mixed>  $data
      */
     public function store(User $user, array $data): Monitor;
+
+    /**
+     * Display the monitor edit page.
+     */
+    public function edit(Monitor $monitor): Response;
+
+    /**
+     * Persist updates for the given monitor.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function update(Monitor $monitor, array $data): Monitor;
 }

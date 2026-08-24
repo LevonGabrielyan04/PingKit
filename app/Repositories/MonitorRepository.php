@@ -41,13 +41,7 @@ class MonitorRepository implements MonitorRepositoryInterface
     public function create(): Response
     {
         return Inertia::render('monitors/Create', [
-            'httpMethods' => collect(HttpMethod::cases())
-                ->map(fn (HttpMethod $method): array => [
-                    'value' => $method->value,
-                    'label' => $method->label(),
-                ])
-                ->values()
-                ->all(),
+            'httpMethods' => $this->httpMethods(),
         ]);
     }
 
@@ -59,5 +53,49 @@ class MonitorRepository implements MonitorRepositoryInterface
     public function store(User $user, array $data): Monitor
     {
         return $user->monitors()->create($data);
+    }
+
+    /**
+     * Display the monitor edit page.
+     */
+    public function edit(Monitor $monitor): Response
+    {
+        return Inertia::render('monitors/Edit', [
+            'httpMethods' => $this->httpMethods(),
+            'monitor' => [
+                'id' => $monitor->id,
+                'url_address' => $monitor->url_address,
+                'ip_address' => $monitor->ip_address,
+                'request_method' => $monitor->request_method->value,
+                'request_headers' => $monitor->request_headers,
+                'is_httpable' => $monitor->is_httpable,
+            ],
+        ]);
+    }
+
+    /**
+     * Persist updates for the given monitor.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function update(Monitor $monitor, array $data): Monitor
+    {
+        $monitor->update($data);
+
+        return $monitor->refresh();
+    }
+
+    /**
+     * @return list<array{value: int, label: string}>
+     */
+    private function httpMethods(): array
+    {
+        return collect(HttpMethod::cases())
+            ->map(fn (HttpMethod $method): array => [
+                'value' => $method->value,
+                'label' => $method->label(),
+            ])
+            ->values()
+            ->all();
     }
 }

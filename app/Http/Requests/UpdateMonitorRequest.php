@@ -6,13 +6,16 @@ namespace App\Http\Requests;
 
 use App\Models\Monitor;
 
-class StoreMonitorRequest extends MonitorRequest
+class UpdateMonitorRequest extends MonitorRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', Monitor::class);
+        /** @var Monitor $monitor */
+        $monitor = $this->route('monitor');
+
+        return $this->user()->can('update', $monitor);
     }
 }

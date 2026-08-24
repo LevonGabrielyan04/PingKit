@@ -27,8 +27,9 @@ test('the monitor form posts to the monitors store route via wayfinder', functio
 
     expect($form)
         ->toContain("import { Form } from '@inertiajs/vue3'")
-        ->toContain("import { store } from '@/routes/monitors'")
-        ->toContain('v-bind="store.form()"');
+        ->toContain("import { store, update } from '@/routes/monitors'")
+        ->toContain('store.form()')
+        ->toContain('update.form(props.monitor.id)');
 });
 
 test('nb-form-group radio option labels keep inline-flex alignment', function () {

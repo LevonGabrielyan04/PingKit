@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Models\Monitor;
 use App\Models\User;
 
 class MonitorPolicy
@@ -14,5 +15,13 @@ class MonitorPolicy
     public function create(User $user): bool
     {
         return true;
+    }
+
+    /**
+     * Determine whether the user can update the model.
+     */
+    public function update(User $user, Monitor $monitor): bool
+    {
+        return $user->id === $monitor->user_id;
     }
 }

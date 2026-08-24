@@ -1,21 +1,47 @@
 <script setup lang="ts">
 import { Form } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import InputError from '@/components/InputError.vue';
-import { store } from '@/routes/monitors';
+import { store, update } from '@/routes/monitors';
 
 type HttpMethodOption = {
     value: number;
     label: string;
 };
 
-type Props = {
-    httpMethods: HttpMethodOption[];
+type MonitorFormModel = {
+    id: string;
+    url_address: string | null;
+    ip_address: string | null;
+    request_method: number;
+    request_headers: Record<string, string> | null;
+    is_httpable: boolean;
 };
 
-defineProps<Props>();
+type Props = {
+    httpMethods: HttpMethodOption[];
+    monitor?: MonitorFormModel;
+};
 
-const targetType = ref<'url' | 'ip'>('url');
+const props = defineProps<Props>();
+
+const isEditing = computed(() => props.monitor !== undefined);
+
+const targetType = ref<'url' | 'ip'>(props.monitor?.ip_address ? 'ip' : 'url');
+
+const requestHeadersDefault = computed(() => {
+    if (!props.monitor?.request_headers) {
+        return '';
+    }
+
+    return JSON.stringify(props.monitor.request_headers);
+});
+
+const formBind = computed(() =>
+    isEditing.value && props.monitor
+        ? update.form(props.monitor.id)
+        : store.form(),
+);
 
 function transform(data: Record<string, unknown>) {
     const { target_type: _targetType, ...payload } = data;
@@ -33,16 +59,18 @@ function transform(data: Record<string, unknown>) {
         data-test="monitor-form"
     >
         <div class="nb-card-content">
-            <h4 class="nb-card-title">New monitor</h4>
+            <h4 class="nb-card-title">
+                {{ isEditing ? 'Edit monitor' : 'New monitor' }}
+            </h4>
             <p class="nb-card-text">
                 Watch a URL or IP address with the HTTP method and headers you
                 need.
             </p>
 
             <Form
-                v-bind="store.form()"
+                v-bind="formBind"
                 :transform="transform"
-                reset-on-success
+                :reset-on-success="!isEditing"
                 v-slot="{ errors, processing }"
                 class="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2"
             >
@@ -83,6 +111,10 @@ function transform(data: Record<string, unknown>) {
                             v-for="method in httpMethods"
                             :key="method.value"
                             :value="method.value"
+                            :selected="
+                                method.value ===
+                                (monitor?.request_method ?? httpMethods[0]?.value)
+                            "
                         >
                             {{ method.label }}
                         </option>
@@ -100,6 +132,7 @@ function transform(data: Record<string, unknown>) {
                         type="url"
                         class="nb-input orange"
                         name="url_address"
+                        :default-value="monitor?.url_address ?? undefined"
                         placeholder="https://example.com"
                         autocomplete="off"
                         data-test="monitor-url-address"
@@ -117,6 +150,7 @@ function transform(data: Record<string, unknown>) {
                         type="text"
                         class="nb-input orange"
                         name="ip_address"
+                        :default-value="monitor?.ip_address ?? undefined"
                         placeholder="192.0.2.1"
                         autocomplete="off"
                         data-test="monitor-ip-address"
@@ -131,7 +165,7 @@ function transform(data: Record<string, unknown>) {
                             class="nb-checkbox orange"
                             name="is_httpable"
                             value="1"
-                            checked
+                            :checked="monitor?.is_httpable ?? true"
                             data-test="monitor-is-httpable"
                         />
                         HTTP-able
@@ -145,6 +179,7 @@ function transform(data: Record<string, unknown>) {
                         id="monitor-request-headers"
                         class="nb-textarea orange min-h-24"
                         name="request_headers"
+                        :default-value="requestHeadersDefault"
                         placeholder='{"User-Agent":"PingKit"}'
                         data-test="monitor-request-headers"
                     />
@@ -158,7 +193,7 @@ function transform(data: Record<string, unknown>) {
                         :disabled="processing"
                         data-test="monitor-submit"
                     >
-                        Create monitor
+                        {{ isEditing ? 'Save changes' : 'Create monitor' }}
                     </button>
                 </div>
             </Form>

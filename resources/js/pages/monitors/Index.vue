@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import Heading from '@/components/Heading.vue';
-import { create, index as monitorsIndex } from '@/routes/monitors';
+import { create, edit, index as monitorsIndex } from '@/routes/monitors';
 
 type MonitorListItem = {
     id: string;
@@ -69,6 +69,7 @@ defineOptions({
                         <th scope="col">Target</th>
                         <th scope="col">Method</th>
                         <th scope="col">HTTP-able</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -80,6 +81,15 @@ defineOptions({
                         <td>{{ monitor.url_address ?? monitor.ip_address }}</td>
                         <td>{{ monitor.request_method }}</td>
                         <td>{{ monitor.is_httpable ? 'Yes' : 'No' }}</td>
+                        <td>
+                            <Link
+                                :href="edit(monitor.id)"
+                                class="font-medium text-black underline underline-offset-2"
+                                data-test="edit-monitor"
+                            >
+                                Edit
+                            </Link>
+                        </td>
                     </tr>
                 </tbody>
             </table>
