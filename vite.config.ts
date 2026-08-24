@@ -38,6 +38,7 @@ export default defineConfig(({ mode }) => {
         server: hmrHost
             ? {
                   host: '0.0.0.0',
+                  origin: `http://${hmrHost}:5173`,
                   hmr: { host: hmrHost },
                   cors: true,
               }

@@ -1,6 +1,6 @@
 <?php
 
-test('the sidebar includes ping and http pages', function () {
+test('the sidebar includes ping, http, and monitors pages', function () {
     $sidebar = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/AppSidebar.vue');
 
     expect($sidebar)
@@ -9,5 +9,6 @@ test('the sidebar includes ping and http pages', function () {
         ->not->toContain('NavFooter')
         ->toContain("title: 'Dashboard'")
         ->toContain("title: 'Ping'")
-        ->toContain("title: 'Http'");
+        ->toContain("title: 'Http'")
+        ->toContain("title: 'Monitors'");
 });

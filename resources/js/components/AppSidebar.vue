@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { Activity, Globe, LayoutGrid } from '@lucide/vue';
+import { Activity, Globe, LayoutGrid, Monitor } from '@lucide/vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
@@ -14,6 +14,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard, http, ping } from '@/routes';
+import { index as monitors } from '@/routes/monitors';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -31,6 +32,11 @@ const mainNavItems: NavItem[] = [
         title: 'Http',
         href: http(),
         icon: Globe,
+    },
+    {
+        title: 'Monitors',
+        href: monitors(),
+        icon: Monitor,
     },
 ];
 </script>
