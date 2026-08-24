@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Contracts\MonitorRepositoryInterface;
 use App\Http\Requests\StoreMonitorRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Response;
 
 class MonitorController extends Controller
@@ -16,9 +17,17 @@ class MonitorController extends Controller
     /**
      * Display the monitors page.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        return $this->monitors->index();
+        return $this->monitors->index($request->user());
+    }
+
+    /**
+     * Show the form for creating a new monitor.
+     */
+    public function create(): Response
+    {
+        return $this->monitors->create();
     }
 
     /**

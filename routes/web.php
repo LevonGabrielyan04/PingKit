@@ -10,6 +10,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('ping', 'Ping')->name('ping');
     Route::inertia('http', 'Http')->name('http');
     Route::get('monitors', [MonitorController::class, 'index'])->name('monitors.index');
+    Route::get('monitors/create', [MonitorController::class, 'create'])->name('monitors.create');
     Route::post('monitors', [MonitorController::class, 'store'])->name('monitors.store');
 });
 

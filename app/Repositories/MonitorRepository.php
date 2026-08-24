@@ -14,11 +14,33 @@ use Inertia\Response;
 class MonitorRepository implements MonitorRepositoryInterface
 {
     /**
-     * Display the monitors page.
+     * Display the monitors list page.
      */
-    public function index(): Response
+    public function index(User $user): Response
     {
         return Inertia::render('monitors/Index', [
+            'monitors' => $user->monitors()
+                ->select(['id', 'url_address', 'ip_address', 'request_method', 'is_httpable'])
+                ->latest()
+                ->get()
+                ->map(fn (Monitor $monitor): array => [
+                    'id' => $monitor->id,
+                    'url_address' => $monitor->url_address,
+                    'ip_address' => $monitor->ip_address,
+                    'request_method' => $monitor->request_method->label(),
+                    'is_httpable' => $monitor->is_httpable,
+                ])
+                ->values()
+                ->all(),
+        ]);
+    }
+
+    /**
+     * Display the monitor creation page.
+     */
+    public function create(): Response
+    {
+        return Inertia::render('monitors/Create', [
             'httpMethods' => collect(HttpMethod::cases())
                 ->map(fn (HttpMethod $method): array => [
                     'value' => $method->value,

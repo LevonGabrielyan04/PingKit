@@ -9,9 +9,14 @@ use Inertia\Response;
 interface MonitorRepositoryInterface
 {
     /**
-     * Display the monitors page.
+     * Display the monitors list page.
      */
-    public function index(): Response;
+    public function index(User $user): Response;
+
+    /**
+     * Display the monitor creation page.
+     */
+    public function create(): Response;
 
     /**
      * Persist a new monitor for the given user.
