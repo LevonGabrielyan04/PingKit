@@ -28,7 +28,7 @@ const { isMobile, state } = useSidebar();
                 <DropdownMenuTrigger as-child>
                     <SidebarMenuButton
                         size="lg"
-                        class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                        class="nb-sidebar-user"
                         data-test="sidebar-menu-button"
                     >
                         <UserInfo :user="user" />
@@ -36,7 +36,7 @@ const { isMobile, state } = useSidebar();
                     </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
-                    class="w-(--reka-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+                    class="w-(--reka-dropdown-menu-trigger-width) min-w-56 rounded-none border-[3.5px] border-black shadow-[4px_4px_0_0_#000]"
                     :side="
                         isMobile
                             ? 'bottom'

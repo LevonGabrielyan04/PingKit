@@ -116,15 +116,15 @@
     --chart-4: hsl(43 74% 66%);
     --chart-5: hsl(27 87% 67%);
     --radius: 0.5rem;
-    --sidebar-background: hsl(0 0% 98%);
-    --sidebar-foreground: hsl(240 5.3% 26.1%);
-    --sidebar-primary: hsl(0 0% 10%);
-    --sidebar-primary-foreground: hsl(0 0% 98%);
-    --sidebar-accent: hsl(0 0% 94%);
-    --sidebar-accent-foreground: hsl(0 0% 30%);
-    --sidebar-border: hsl(0 0% 91%);
-    --sidebar-ring: hsl(217.2 91.2% 59.8%);
-    --sidebar: hsl(0 0% 98%);
+    --sidebar-background: #ffffff;
+    --sidebar-foreground: #000000;
+    --sidebar-primary: #ff5733;
+    --sidebar-primary-foreground: #000000;
+    --sidebar-accent: #ff5733;
+    --sidebar-accent-foreground: #000000;
+    --sidebar-border: #000000;
+    --sidebar-ring: #000000;
+    --sidebar: #ffffff;
 }
 
 .dark {
@@ -152,15 +152,15 @@
     --chart-3: hsl(30 80% 55%);
     --chart-4: hsl(280 65% 60%);
     --chart-5: hsl(340 75% 55%);
-    --sidebar-background: hsl(0 0% 7%);
-    --sidebar-foreground: hsl(0 0% 95.9%);
-    --sidebar-primary: hsl(360, 100%, 100%);
-    --sidebar-primary-foreground: hsl(0 0% 100%);
-    --sidebar-accent: hsl(0 0% 15.9%);
-    --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-    --sidebar-border: hsl(0 0% 15.9%);
-    --sidebar-ring: hsl(217.2 91.2% 59.8%);
-    --sidebar: hsl(240 5.9% 10%);
+    --sidebar-background: #111111;
+    --sidebar-foreground: #ffffff;
+    --sidebar-primary: #ff5733;
+    --sidebar-primary-foreground: #000000;
+    --sidebar-accent: #ff5733;
+    --sidebar-accent-foreground: #000000;
+    --sidebar-border: #ffffff;
+    --sidebar-ring: #ffffff;
+    --sidebar: #111111;
 }
 
 @layer base {
@@ -176,4 +176,173 @@
     .project-color-theme {
         color: orange;
     }
+}
+
+/*
+  App chrome NeoBrutalismCSS styling — matches Monitors (nb-card / nb-button orange).
+  Unlayered so these beat Tailwind utilities on the same nodes without !important.
+*/
+.nb-app-sidebar [data-sidebar="sidebar"],
+[data-slot="sidebar"][data-mobile="true"] {
+    background-color: #ffffff;
+    color: #000000;
+    border: 3.5px solid #000000;
+    box-shadow: 8px 8px 0px #000000;
+    border-radius: 0;
+}
+
+.dark .nb-app-sidebar [data-sidebar="sidebar"],
+.dark [data-slot="sidebar"][data-mobile="true"] {
+    background-color: #111111;
+    color: #ffffff;
+    border-color: #ffffff;
+    box-shadow: 8px 8px 0px #ffffff;
+}
+
+.nb-app-sidebar [data-sidebar="header"] {
+    border-bottom: 3.5px solid #000000;
+    border-radius: 0;
+}
+
+.dark .nb-app-sidebar [data-sidebar="header"] {
+    border-bottom-color: #ffffff;
+}
+
+.nb-app-sidebar [data-sidebar="footer"] {
+    border-top: 3.5px solid #000000;
+    border-radius: 0;
+}
+
+.dark .nb-app-sidebar [data-sidebar="footer"] {
+    border-top-color: #ffffff;
+}
+
+.nb-app-sidebar [data-sidebar="group-label"] {
+    font-family: "Lexend Mega", "Public Sans", sans-serif;
+    font-weight: 900;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #000000;
+}
+
+.dark .nb-app-sidebar [data-sidebar="group-label"] {
+    color: #ffffff;
+}
+
+.nb-sidebar-link {
+    border: 2.5px solid transparent;
+    border-radius: 0;
+    font-weight: 600;
+    transition: all 0.15s cubic-bezier(0.77, 0, 0.18, 1);
+}
+
+.nb-sidebar-link:hover {
+    background: #000000;
+    color: #ffffff;
+    border-color: #000000;
+    box-shadow: 3px 3px 0px #000000;
+    transform: translate(-2px, -2px);
+}
+
+.nb-sidebar-link[data-active="true"] {
+    background: #ff5733;
+    color: #000000;
+    border-color: #000000;
+    box-shadow: 3px 3px 0px #000000;
+    font-weight: 700;
+}
+
+.dark .nb-sidebar-link:hover {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    box-shadow: 3px 3px 0px #ffffff;
+}
+
+.dark .nb-sidebar-link[data-active="true"] {
+    background: #ff5733;
+    color: #000000;
+    border-color: #ffffff;
+    box-shadow: 3px 3px 0px #ffffff;
+}
+
+.nb-sidebar-user {
+    border: 2.5px solid #000000;
+    border-radius: 0;
+    box-shadow: 3px 3px 0px #000000;
+    background: #ffffff;
+    color: #000000;
+}
+
+.nb-sidebar-user:hover,
+.nb-sidebar-user[data-state="open"] {
+    background: #ff5733;
+    color: #000000;
+    box-shadow: 2px 2px 0px #000000;
+    transform: translate(1px, 1px);
+}
+
+.dark .nb-sidebar-user {
+    border-color: #ffffff;
+    box-shadow: 3px 3px 0px #ffffff;
+    background: #111111;
+    color: #ffffff;
+}
+
+.dark .nb-sidebar-user:hover,
+.dark .nb-sidebar-user[data-state="open"] {
+    background: #ff5733;
+    color: #000000;
+    box-shadow: 2px 2px 0px #ffffff;
+}
+
+.nb-app-inset {
+    border: 3.5px solid #000000;
+    border-radius: 0;
+    box-shadow: 8px 8px 0px #000000;
+    background: #ffffff;
+}
+
+.dark .nb-app-inset {
+    border-color: #ffffff;
+    box-shadow: 8px 8px 0px #ffffff;
+    background: #111111;
+}
+
+.nb-app-header {
+    border-bottom: 3.5px solid #000000;
+    background: #ffffff;
+}
+
+.dark .nb-app-header {
+    border-bottom-color: #ffffff;
+    background: #111111;
+}
+
+.nb-sidebar-trigger {
+    border: 2.5px solid #000000;
+    border-radius: 0;
+    box-shadow: 3px 3px 0px #000000;
+    background: #ffffff;
+    color: #000000;
+}
+
+.nb-sidebar-trigger:hover {
+    background: #ff5733;
+    box-shadow: 2px 2px 0px #000000;
+    transform: translate(1px, 1px);
+}
+
+.dark .nb-sidebar-trigger {
+    border-color: #ffffff;
+    box-shadow: 3px 3px 0px #ffffff;
+    background: #111111;
+    color: #ffffff;
+}
+
+.dark .nb-sidebar-trigger:hover {
+    background: #ff5733;
+    color: #000000;
+    box-shadow: 2px 2px 0px #ffffff;
 }

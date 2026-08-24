@@ -42,12 +42,12 @@ const mainNavItems: NavItem[] = [
 </script>
 
 <template>
-    <Sidebar collapsible="icon" variant="inset">
+    <Sidebar collapsible="icon" variant="inset" class="nb-app-sidebar">
         <SidebarHeader>
             <SidebarMenu>
                 <SidebarMenuItem>
-                    <SidebarMenuButton size="lg" as-child>
-                        <Link :href="dashboard()">
+                    <SidebarMenuButton size="lg" as-child class="!rounded-none">
+                        <Link :href="dashboard()" class="nb-navbar-brand gap-2">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>
