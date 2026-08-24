@@ -16,3 +16,6 @@ Run `npm run biome:check` (or `biome ci .`) for frontend lint/format in CI via `
 
 ## Prefer project-color-theme for element colors
 When adding an element color in Vue/JS (status text, highlights, accent colors, etc.), prefer using the global CSS class `project-color-theme` over hardcoded inline colors or other one-off color utilities, unless the design explicitly requires a different color.
+
+## Override nb-form-group radio label display
+NeoBrutalismCSS `.nb-form-group label { display: block }` overrides `.nb-radio + label { display: inline-flex; align-items: center }`. Keep the unlayered fix in app.css: `.nb-form-group .nb-radio + label { display: inline-flex; align-items: center; margin-bottom: 0 }` so option text stays aligned with the fake radio circle.

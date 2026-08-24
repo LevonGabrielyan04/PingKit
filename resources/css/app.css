@@ -346,3 +346,14 @@
     color: #000000;
     box-shadow: 2px 2px 0px #ffffff;
 }
+
+/*
+  NeoBrutalismCSS: .nb-form-group label { display: block } overrides
+  .nb-radio + label { display: inline-flex; align-items: center }, which
+  misaligns the fake radio circle with the option text. Restore kit layout.
+*/
+.nb-form-group .nb-radio + label {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 0;
+}
