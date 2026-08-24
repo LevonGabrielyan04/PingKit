@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { Form } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import InputError from '@/components/InputError.vue';
+import { store } from '@/routes/monitors';
 
 type HttpMethodOption = {
     value: number;
@@ -10,14 +13,18 @@ type Props = {
     httpMethods: HttpMethodOption[];
 };
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const targetType = ref<'url' | 'ip'>('url');
-const urlAddress = ref('');
-const ipAddress = ref('');
-const requestMethod = ref(props.httpMethods[0]?.value ?? 1);
-const requestHeaders = ref('');
-const isHttpable = ref(true);
+
+function transform(data: Record<string, unknown>) {
+    const { target_type: _targetType, ...payload } = data;
+
+    return {
+        ...payload,
+        is_httpable: Boolean(data.is_httpable),
+    };
+}
 </script>
 
 <template>
@@ -32,9 +39,12 @@ const isHttpable = ref(true);
                 need.
             </p>
 
-            <form
+            <Form
+                v-bind="store.form()"
+                :transform="transform"
+                reset-on-success
+                v-slot="{ errors, processing }"
                 class="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2"
-                @submit.prevent
             >
                 <div class="nb-form-group mb-0">
                     <label>Target</label>
@@ -65,7 +75,6 @@ const isHttpable = ref(true);
                     <label for="monitor-request-method">Request method</label>
                     <select
                         id="monitor-request-method"
-                        v-model="requestMethod"
                         class="nb-dropdown"
                         name="request_method"
                         data-test="monitor-request-method"
@@ -78,6 +87,7 @@ const isHttpable = ref(true);
                             {{ method.label }}
                         </option>
                     </select>
+                    <InputError :message="errors.request_method" />
                 </div>
 
                 <div
@@ -87,7 +97,6 @@ const isHttpable = ref(true);
                     <label for="monitor-url-address">URL address</label>
                     <input
                         id="monitor-url-address"
-                        v-model="urlAddress"
                         type="url"
                         class="nb-input orange"
                         name="url_address"
@@ -95,6 +104,7 @@ const isHttpable = ref(true);
                         autocomplete="off"
                         data-test="monitor-url-address"
                     />
+                    <InputError :message="errors.url_address" />
                 </div>
 
                 <div
@@ -104,7 +114,6 @@ const isHttpable = ref(true);
                     <label for="monitor-ip-address">IP address</label>
                     <input
                         id="monitor-ip-address"
-                        v-model="ipAddress"
                         type="text"
                         class="nb-input orange"
                         name="ip_address"
@@ -112,43 +121,47 @@ const isHttpable = ref(true);
                         autocomplete="off"
                         data-test="monitor-ip-address"
                     />
+                    <InputError :message="errors.ip_address" />
                 </div>
 
                 <div class="nb-form-group mb-0">
                     <label class="nb-label">
                         <input
-                            v-model="isHttpable"
                             type="checkbox"
                             class="nb-checkbox orange"
                             name="is_httpable"
+                            value="1"
+                            checked
                             data-test="monitor-is-httpable"
                         />
                         HTTP-able
                     </label>
+                    <InputError :message="errors.is_httpable" />
                 </div>
 
                 <div class="nb-form-group mb-0 md:col-span-2">
                     <label for="monitor-request-headers">Request headers</label>
                     <textarea
                         id="monitor-request-headers"
-                        v-model="requestHeaders"
                         class="nb-textarea orange min-h-24"
                         name="request_headers"
                         placeholder='{"User-Agent":"PingKit"}'
                         data-test="monitor-request-headers"
                     />
+                    <InputError :message="errors.request_headers" />
                 </div>
 
                 <div class="nb-card-actions md:col-span-2">
                     <button
                         type="submit"
                         class="nb-button orange"
+                        :disabled="processing"
                         data-test="monitor-submit"
                     >
                         Create monitor
                     </button>
                 </div>
-            </form>
+            </Form>
         </div>
     </div>
 </template>

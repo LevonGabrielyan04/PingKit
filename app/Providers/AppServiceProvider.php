@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Contracts\MonitorRepositoryInterface;
+use App\Repositories\MonitorRepository;
 use App\Support\PasswordDefaults;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
@@ -15,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(MonitorRepositoryInterface::class, MonitorRepository::class);
     }
 
     /**

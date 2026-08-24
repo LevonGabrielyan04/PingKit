@@ -10,6 +10,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('ping', 'Ping')->name('ping');
     Route::inertia('http', 'Http')->name('http');
     Route::get('monitors', [MonitorController::class, 'index'])->name('monitors.index');
+    Route::post('monitors', [MonitorController::class, 'store'])->name('monitors.store');
 });
 
 require __DIR__.'/settings.php';

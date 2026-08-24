@@ -22,6 +22,15 @@ test('the monitor form uses NeoBrutalismCSS field classes', function () {
         ->toContain('max-w-none');
 });
 
+test('the monitor form posts to the monitors store route via wayfinder', function () {
+    $form = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/MonitorForm.vue');
+
+    expect($form)
+        ->toContain("import { Form } from '@inertiajs/vue3'")
+        ->toContain("import { store } from '@/routes/monitors'")
+        ->toContain('v-bind="store.form()"');
+});
+
 test('nb-form-group radio option labels keep inline-flex alignment', function () {
     $css = file_get_contents(dirname(__DIR__, 2).'/resources/css/app.css');
 
