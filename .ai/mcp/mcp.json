@@ -3,7 +3,7 @@
     "laravel-boost": {
       "command": "/usr/bin/php8.5",
       "args": [
-        "/media/levon/data/Proektner/Laravel/PingKit/artisan",
+        "artisan",
         "boost:mcp"
       ]
     }
