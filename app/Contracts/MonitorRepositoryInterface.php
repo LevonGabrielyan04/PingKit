@@ -4,6 +4,7 @@ namespace App\Contracts;
 
 use App\Models\Monitor;
 use App\Models\User;
+use Illuminate\Support\LazyCollection;
 use Inertia\Response;
 
 interface MonitorRepositoryInterface
@@ -36,4 +37,11 @@ interface MonitorRepositoryInterface
      * @param  array<string, mixed>  $data
      */
     public function update(Monitor $monitor, array $data): Monitor;
+
+    /**
+     * Stream httpable monitors in id-ordered chunks for outbound request building.
+     *
+     * @return LazyCollection<int, Monitor>
+     */
+    public function lazyHttpableById(int $chunkSize = 100): LazyCollection;
 }

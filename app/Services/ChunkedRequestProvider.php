@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Contracts\ChunkedRequestProviderInterface;
+use App\Contracts\MonitorRepositoryInterface;
 use App\Models\Monitor;
 use Generator;
 use GuzzleHttp\Psr7\Request;
@@ -13,6 +14,8 @@ use Illuminate\Validation\ValidationException;
 
 class ChunkedRequestProvider implements ChunkedRequestProviderInterface
 {
+    public function __construct(private MonitorRepositoryInterface $monitors) {}
+
     /**
      * Yield Guzzle Pool–ready requests for httpable monitors, loaded in chunks.
      *
@@ -20,9 +23,11 @@ class ChunkedRequestProvider implements ChunkedRequestProviderInterface
      */
     public function requests(int $chunkSize = 100): Generator
     {
-        if ($chunkSize > 200) {
+        $maxChunkSize = (int) config('monitors.max_chunk_size');
+
+        if ($chunkSize > $maxChunkSize) {
             throw ValidationException::withMessages([
-                'chunkSize' => 'Chunk size must be no more than 200.',
+                'chunkSize' => "Chunk size must be no more than {$maxChunkSize}.",
             ]);
         }
 
@@ -34,12 +39,7 @@ class ChunkedRequestProvider implements ChunkedRequestProviderInterface
      */
     private function yieldRequests(int $chunkSize): Generator
     {
-        $monitors = Monitor::query()
-            ->select(['id', 'url_address', 'ip_address', 'request_method', 'request_headers'])
-            ->where('is_httpable', true)
-            ->lazyById($chunkSize);
-
-        foreach ($monitors as $monitor) {
+        foreach ($this->monitors->lazyHttpableById($chunkSize) as $monitor) {
             yield $monitor->id => $this->toRequest($monitor);
         }
     }

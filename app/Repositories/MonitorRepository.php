@@ -8,6 +8,7 @@ use App\Contracts\MonitorRepositoryInterface;
 use App\Enums\HttpMethod;
 use App\Models\Monitor;
 use App\Models\User;
+use Illuminate\Support\LazyCollection;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -83,6 +84,19 @@ class MonitorRepository implements MonitorRepositoryInterface
         $monitor->update($data);
 
         return $monitor->refresh();
+    }
+
+    /**
+     * Stream httpable monitors in id-ordered chunks for outbound request building.
+     *
+     * @return LazyCollection<int, Monitor>
+     */
+    public function lazyHttpableById(int $chunkSize = 100): LazyCollection
+    {
+        return Monitor::query()
+            ->select(['id', 'url_address', 'ip_address', 'request_method', 'request_headers'])
+            ->where('is_httpable', true)
+            ->lazyById($chunkSize);
     }
 
     /**

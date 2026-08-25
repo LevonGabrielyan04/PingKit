@@ -67,6 +67,9 @@ test('it reads monitors in chunks while yielding requests', function () {
         ->and(collect($requests)->every(fn ($request) => $request instanceof Request))->toBeTrue();
 });
 
-test('it rejects chunk sizes greater than 200', function () {
-    app(ChunkedRequestProviderInterface::class)->requests(chunkSize: 201);
-})->throws(ValidationException::class, 'Chunk size must be no more than 200.');
+test('it rejects chunk sizes greater than the configured maximum', function () {
+    $maxChunkSize = (int) config('monitors.max_chunk_size');
+
+    expect(fn () => app(ChunkedRequestProviderInterface::class)->requests(chunkSize: $maxChunkSize + 1))
+        ->toThrow(ValidationException::class, "Chunk size must be no more than {$maxChunkSize}.");
+});
