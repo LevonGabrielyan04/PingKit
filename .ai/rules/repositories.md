@@ -22,3 +22,6 @@ Single-page httpable loads use MonitorRepositoryInterface::httpableIdsAfterId() 
 
 ## markCheckedAt bulk-stamps monitors
 MonitorRepositoryInterface::markCheckedAt(list of monitor ids) bulk-updates checked_at to now() and no-ops on an empty id list. Use it from MarkMonitorsCheckedAt, not ad-hoc Monitor::query() updates.
+
+## Httpable pages skip recent checked_at
+httpableAfterIdQuery (used by httpableIdsAfterId / httpablePageAfterId) only returns httpable monitors whose checked_at is null or older than 60 seconds. Recently checked monitors are excluded so Polls jobs do not re-check within the cooldown.

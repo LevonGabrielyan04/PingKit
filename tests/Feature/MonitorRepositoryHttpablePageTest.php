@@ -68,3 +68,34 @@ test('httpablePageAfterId returns request columns for one page', function () {
         ])
         ->and($page->first()->getAttributes())->not->toHaveKey('is_httpable');
 });
+
+test('httpableIdsAfterId skips monitors checked within the last 60 seconds', function () {
+    $user = User::factory()->create();
+
+    $neverChecked = Monitor::factory()->for($user)->create([
+        'is_httpable' => true,
+        'checked_at' => null,
+    ]);
+
+    $stale = Monitor::factory()->for($user)->create([
+        'is_httpable' => true,
+        'checked_at' => now()->subSeconds(61),
+    ]);
+
+    Monitor::factory()->for($user)->create([
+        'is_httpable' => true,
+        'checked_at' => now()->subSeconds(30),
+    ]);
+
+    Monitor::factory()->for($user)->create([
+        'is_httpable' => true,
+        'checked_at' => now(),
+    ]);
+
+    $ids = app(MonitorRepositoryInterface::class)
+        ->httpableIdsAfterId(null, 10);
+
+    expect($ids->all())->toBe(
+        collect([$neverChecked, $stale])->sortBy('id')->pluck('id')->all()
+    );
+});

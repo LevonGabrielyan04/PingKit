@@ -147,6 +147,10 @@ class MonitorRepository implements MonitorRepositoryInterface
     {
         return Monitor::query()
             ->where('is_httpable', true)
+            ->where(function (Builder $query): void {
+                $query->whereNull('checked_at')
+                    ->orWhere('checked_at', '<=', now()->subSeconds(60));
+            })
             ->when($afterId !== null, fn (Builder $query): Builder => $query->where('id', '>', $afterId))
             ->orderBy('id')
             ->limit($limit);
