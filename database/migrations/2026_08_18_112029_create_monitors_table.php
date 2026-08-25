@@ -21,9 +21,11 @@ return new class extends Migration
             $table->unsignedTinyInteger('request_method')->default(HttpMethod::Get);
             $table->json('request_headers')->nullable();
             $table->boolean('is_httpable')->default(true);
+            $table->timestamp('checked_at')->nullable();
             $table->timestamps();
 
             $table->index('is_httpable');
+            $table->index('checked_at');
             $table->index('updated_at');
         });
 

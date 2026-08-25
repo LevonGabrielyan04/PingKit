@@ -118,3 +118,28 @@ test('execute then writeLogs persists a full check cycle', function () {
         ->and($log->response_headers['x-from'])->toBe('origin')
         ->and($log->request_headers['x-check'])->toBe('1');
 });
+
+test('executePage only checks monitors after the cursor for one page', function () {
+    $user = User::factory()->create();
+
+    $monitors = Monitor::factory()->for($user)->count(3)->create([
+        'url_address' => 'https://example.com/page',
+        'is_httpable' => true,
+    ])->sortBy('id')->values();
+
+    $mock = new MockHandler([
+        new Response(200),
+    ]);
+
+    $service = new HttpCheckPoolService(
+        app(ChunkedRequestProviderInterface::class),
+        new Client(['handler' => HandlerStack::create($mock)]),
+    );
+
+    $results = $service->executePage($monitors[0]->id, 1);
+
+    expect($results)->toHaveCount(1)
+        ->and($results)->toHaveKey($monitors[1]->id)
+        ->and($results)->not->toHaveKey($monitors[0]->id)
+        ->and($results)->not->toHaveKey($monitors[2]->id);
+});

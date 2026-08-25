@@ -28,13 +28,21 @@ class ChunkedRequestProvider implements ChunkedRequestProviderInterface
      */
     public function requests(int $chunkSize = 100): Generator
     {
-        if ($chunkSize > $this->maxChunkSize) {
-            throw ValidationException::withMessages([
-                'chunkSize' => "Chunk size must be no more than {$this->maxChunkSize}.",
-            ]);
-        }
+        $this->assertChunkSize($chunkSize);
 
         return $this->yieldRequests($chunkSize);
+    }
+
+    /**
+     * Yield Guzzle Pool–ready requests for a single httpable monitor page.
+     *
+     * @return Generator<string, Request>
+     */
+    public function requestsPage(?string $afterId, int $limit): Generator
+    {
+        $this->assertChunkSize($limit);
+
+        return $this->yieldRequestsPage($afterId, $limit);
     }
 
     /**
@@ -44,6 +52,25 @@ class ChunkedRequestProvider implements ChunkedRequestProviderInterface
     {
         foreach ($this->monitors->lazyHttpableById($chunkSize) as $monitor) {
             yield $monitor->id => $this->toRequest($monitor);
+        }
+    }
+
+    /**
+     * @return Generator<string, Request>
+     */
+    private function yieldRequestsPage(?string $afterId, int $limit): Generator
+    {
+        foreach ($this->monitors->httpablePageAfterId($afterId, $limit) as $monitor) {
+            yield $monitor->id => $this->toRequest($monitor);
+        }
+    }
+
+    private function assertChunkSize(int $chunkSize): void
+    {
+        if ($chunkSize > $this->maxChunkSize) {
+            throw ValidationException::withMessages([
+                'chunkSize' => "Chunk size must be no more than {$this->maxChunkSize}.",
+            ]);
         }
     }
 

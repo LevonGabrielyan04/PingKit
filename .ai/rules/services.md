@@ -13,3 +13,6 @@ HttpCheckPoolService::execute() returns pool results keyed by monitor id. Persis
 
 ## HttpCheckPoolService returns HttpCheckResult DTOs
 HttpCheckPoolService::execute() returns array<string, HttpCheckResult> keyed by monitor id. Build results via HttpCheckResult::fromResponse() / fromFailure(); persist with HttpCheckLogRepositoryInterface::writeLogs(). Network failures use HttpCheckResult::NETWORK_ERROR_STATUS_CODE (599); the service aliases the same constant.
+
+## executePage for cursor-scoped pool checks
+HttpCheckPoolService::executePage(?afterId, limit) runs one page via ChunkedRequestProviderInterface::requestsPage(). Use execute() only for full sweeps; Polls jobs must use executePage.

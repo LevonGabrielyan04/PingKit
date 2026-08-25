@@ -16,3 +16,6 @@ Persist pool check results with HttpCheckLogRepositoryInterface::writeLogs($resu
 
 ## writeLogs accepts HttpCheckResult DTOs
 HttpCheckLogRepositoryInterface::writeLogs() takes array<string, HttpCheckResult>, not associative arrays. Read camelCase DTO properties when inserting rows.
+
+## Httpable page queries via afterId cursor
+Single-page httpable loads use MonitorRepositoryInterface::httpableIdsAfterId() / httpablePageAfterId(?string $afterId, int $limit)—not unscoped lazyHttpableById() inside Polls chunk jobs. Select the same request columns as lazyHttpableById for pages.

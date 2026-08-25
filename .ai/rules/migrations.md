@@ -13,3 +13,9 @@ monitors.request_method is an unsigned tinyint with default HttpMethod::Get (1).
 
 ## Monitor is_httpable boolean with index
 monitors.is_httpable is a non-nullable boolean defaulting to true, with an index. Mirror the default in Monitor $attributes and cast it to boolean. Keep it in Fillable and the factory.
+
+## Monitor checked_at is nullable indexed timestamp
+monitors.checked_at is a nullable timestamp with an index. It tracks when a monitor was last checked; leave null until the first check. Cast it to datetime on the Monitor model; do not put it in Fillable.
+
+## Monitor checked_at is nullable indexed timestamp
+monitors.checked_at is a nullable timestamp with an index. It tracks when a monitor was last checked; leave null until the first check. Cast it to datetime on the Monitor model and keep it in Fillable.

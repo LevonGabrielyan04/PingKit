@@ -47,14 +47,37 @@ class HttpCheckPoolService
      */
     public function execute(int $chunkSize = 100): array
     {
+        return $this->runPool(
+            $this->requestProvider->requests($chunkSize),
+        );
+    }
+
+    /**
+     * Execute pooled HTTP checks for a single httpable monitor page.
+     *
+     * @return array<string, HttpCheckResult>
+     */
+    public function executePage(?string $afterId, int $limit = 100): array
+    {
+        return $this->runPool(
+            $this->requestProvider->requestsPage($afterId, $limit),
+        );
+    }
+
+    /**
+     * @param  iterable<string, RequestInterface>  $requestFactories
+     * @return array<string, HttpCheckResult>
+     */
+    private function runPool(iterable $requestFactories): array
+    {
         $results = [];
         /** @var array<string, RequestInterface> $requestsByMonitor */
         $requestsByMonitor = [];
         /** @var array<string, TransferStats> $transferStats */
         $transferStats = [];
 
-        $requests = function () use ($chunkSize, &$requestsByMonitor, &$transferStats) {
-            foreach ($this->requestProvider->requests($chunkSize) as $monitorId => $request) {
+        $requests = function () use ($requestFactories, &$requestsByMonitor, &$transferStats) {
+            foreach ($requestFactories as $monitorId => $request) {
                 $requestsByMonitor[$monitorId] = $request;
 
                 yield $monitorId => function (array $options) use ($request, $monitorId, &$transferStats) {

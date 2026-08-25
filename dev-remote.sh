@@ -106,6 +106,18 @@ php artisan queue:work "${QUEUE_CONNECTION}" \
     --no-interaction &
 pids+=($!)
 
+# --- NEW COMMANDS ADDED HERE ---
+
+echo "Starting Laravel queue worker for queue 'Polls'"
+php artisan queue:work --queue=Polls &
+pids+=($!)
+
+echo "Starting Laravel scheduler"
+php artisan schedule:work &
+pids+=($!)
+
+# -------------------------------
+
 echo ""
 echo "Remote access: ${APP_URL}"
 echo "Press Ctrl+C to stop all processes."

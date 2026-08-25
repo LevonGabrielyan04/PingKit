@@ -73,3 +73,21 @@ test('it rejects chunk sizes greater than the configured maximum', function () {
     expect(fn () => app(ChunkedRequestProviderInterface::class)->requests(chunkSize: $maxChunkSize + 1))
         ->toThrow(ValidationException::class, "Chunk size must be no more than {$maxChunkSize}.");
 });
+
+test('requestsPage yields only one cursor page of monitors', function () {
+    $user = User::factory()->create();
+
+    $monitors = Monitor::factory()->for($user)->count(4)->create([
+        'is_httpable' => true,
+    ])->sortBy('id')->values();
+
+    $requests = iterator_to_array(
+        app(ChunkedRequestProviderInterface::class)->requestsPage($monitors[0]->id, 2),
+    );
+
+    expect($requests)->toHaveCount(2)
+        ->and(array_keys($requests))->toBe([
+            $monitors[1]->id,
+            $monitors[2]->id,
+        ]);
+});

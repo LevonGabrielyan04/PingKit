@@ -4,6 +4,7 @@ namespace App\Contracts;
 
 use App\Models\Monitor;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use Inertia\Response;
 
@@ -44,4 +45,18 @@ interface MonitorRepositoryInterface
      * @return LazyCollection<int, Monitor>
      */
     public function lazyHttpableById(int $chunkSize = 100): LazyCollection;
+
+    /**
+     * Return one id-ordered page of httpable monitor ids after an optional cursor.
+     *
+     * @return Collection<int, string>
+     */
+    public function httpableIdsAfterId(?string $afterId, int $limit): Collection;
+
+    /**
+     * Return one id-ordered page of httpable monitors after an optional cursor.
+     *
+     * @return Collection<int, Monitor>
+     */
+    public function httpablePageAfterId(?string $afterId, int $limit): Collection;
 }

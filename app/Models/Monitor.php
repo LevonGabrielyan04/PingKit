@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\HttpMethod;
+use Carbon\CarbonImmutable;
 use Database\Factories\MonitorFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -10,7 +11,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
@@ -20,10 +20,11 @@ use Illuminate\Support\Carbon;
  * @property HttpMethod $request_method
  * @property array<string, mixed>|null $request_headers
  * @property bool $is_httpable
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
+ * @property CarbonImmutable|null $checked_at
+ * @property CarbonImmutable|null $created_at
+ * @property CarbonImmutable|null $updated_at
  */
-#[Fillable(['user_id', 'url_address', 'ip_address', 'request_method', 'request_headers', 'is_httpable'])]
+#[Fillable(['user_id', 'url_address', 'ip_address', 'request_method', 'request_headers', 'is_httpable', 'checked_at'])]
 class Monitor extends Model
 {
     /** @use HasFactory<MonitorFactory> */
@@ -46,6 +47,7 @@ class Monitor extends Model
             'request_method' => HttpMethod::class,
             'request_headers' => 'array',
             'is_httpable' => 'boolean',
+            'checked_at' => 'datetime',
         ];
     }
 

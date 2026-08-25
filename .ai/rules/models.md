@@ -13,3 +13,9 @@ Monitor.request_method is an int-backed App\Enums\HttpMethod. Keep it in Fillabl
 
 ## Cast Monitor is_httpable to boolean
 Monitor.is_httpable is a boolean defaulting to true. Keep it in Fillable, casts() as boolean, PHPDoc, and $attributes (true). Factory should set true.
+
+## Cast Monitor checked_at to datetime
+Monitor.checked_at is a nullable datetime. Keep it in PHPDoc and casts() as datetime. Do not add it to Fillable — it is system-managed, not user input.
+
+## Cast Monitor checked_at to datetime
+Monitor.checked_at is a nullable datetime. Keep it in Fillable, PHPDoc, and casts() as datetime.

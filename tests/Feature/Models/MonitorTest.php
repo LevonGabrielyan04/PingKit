@@ -3,6 +3,7 @@
 use App\Enums\HttpMethod;
 use App\Models\Monitor;
 use App\Models\User;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Str;
 
 test('a monitor generates a version 7 uuid primary key', function () {
@@ -55,4 +56,17 @@ test('a monitor defaults is_httpable to true', function () {
     $monitor = Monitor::factory()->create();
 
     expect($monitor->is_httpable)->toBeTrue();
+});
+
+test('a monitor defaults checked_at to null and casts it to carbon', function () {
+    $monitor = Monitor::factory()->create();
+
+    expect($monitor->checked_at)->toBeNull();
+
+    $checkedAt = now()->startOfSecond();
+    $monitor->update(['checked_at' => $checkedAt]);
+    $monitor->refresh();
+
+    expect($monitor->checked_at)->toBeInstanceOf(CarbonImmutable::class)
+        ->and($monitor->checked_at->equalTo($checkedAt))->toBeTrue();
 });

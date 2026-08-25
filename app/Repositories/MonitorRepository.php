@@ -8,6 +8,8 @@ use App\Contracts\MonitorRepositoryInterface;
 use App\Enums\HttpMethod;
 use App\Models\Monitor;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -97,6 +99,41 @@ class MonitorRepository implements MonitorRepositoryInterface
             ->select(['id', 'url_address', 'ip_address', 'request_method', 'request_headers'])
             ->where('is_httpable', true)
             ->lazyById($chunkSize);
+    }
+
+    /**
+     * Return one id-ordered page of httpable monitor ids after an optional cursor.
+     *
+     * @return Collection<int, string>
+     */
+    public function httpableIdsAfterId(?string $afterId, int $limit): Collection
+    {
+        return $this->httpableAfterIdQuery($afterId, $limit)
+            ->pluck('id');
+    }
+
+    /**
+     * Return one id-ordered page of httpable monitors after an optional cursor.
+     *
+     * @return Collection<int, Monitor>
+     */
+    public function httpablePageAfterId(?string $afterId, int $limit): Collection
+    {
+        return $this->httpableAfterIdQuery($afterId, $limit)
+            ->select(['id', 'url_address', 'ip_address', 'request_method', 'request_headers'])
+            ->get();
+    }
+
+    /**
+     * @return Builder<Monitor>
+     */
+    private function httpableAfterIdQuery(?string $afterId, int $limit): Builder
+    {
+        return Monitor::query()
+            ->where('is_httpable', true)
+            ->when($afterId !== null, fn (Builder $query): Builder => $query->where('id', '>', $afterId))
+            ->orderBy('id')
+            ->limit($limit);
     }
 
     /**

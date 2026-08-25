@@ -19,6 +19,7 @@ test('monitors table has the expected columns', function () {
         'request_method',
         'request_headers',
         'is_httpable',
+        'checked_at',
         'created_at',
         'updated_at',
     ]);
@@ -37,7 +38,9 @@ test('monitors table has the expected columns', function () {
         ->and($columns['request_headers']['nullable'])->toBeTrue()
         ->and($columns['is_httpable']['type_name'])->toBe('tinyint')
         ->and($columns['is_httpable']['nullable'])->toBeFalse()
-        ->and($columns['is_httpable']['default'])->toBe('1');
+        ->and($columns['is_httpable']['default'])->toBe('1')
+        ->and($columns['checked_at']['type_name'])->toBe('timestamp')
+        ->and($columns['checked_at']['nullable'])->toBeTrue();
 
     $primary = collect(Schema::getIndexes('monitors'))->firstWhere('primary', true);
     $foreign = collect(Schema::getForeignKeys('monitors'))->firstWhere('columns', ['user_id']);
@@ -47,6 +50,7 @@ test('monitors table has the expected columns', function () {
         ->and($foreign['foreign_columns'])->toBe(['id'])
         ->and($foreign['on_delete'])->toBe('cascade')
         ->and(Schema::hasIndex('monitors', ['is_httpable']))->toBeTrue()
+        ->and(Schema::hasIndex('monitors', ['checked_at']))->toBeTrue()
         ->and(Schema::hasIndex('monitors', ['updated_at']))->toBeTrue();
 });
 
