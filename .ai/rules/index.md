@@ -6,6 +6,7 @@ Before planning or editing, find the row whose globs match the file's path and r
 | --- | --- |
 | resources/js/components/MonitorForm.vue, resources/js/components/{AppSidebar,NavMain,NavUser,AppLogo,AppSidebarHeader,Breadcrumbs}.vue | .ai/rules/components.md |
 | app/Http/Controllers/MonitorController.php | .ai/rules/controllers.md |
+| app/Data/**/*.php | .ai/rules/data.md |
 | phpunit.xml | .ai/rules/general.md |
 | resources/js/**/*.{ts,vue}, resources/js/**/*, resources/css/app.css, vite.config.ts | .ai/rules/js.md |
 | database/migrations/** | .ai/rules/migrations.md |

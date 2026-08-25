@@ -13,3 +13,6 @@ Chunked outbound request building loads httpable monitors through MonitorReposit
 
 ## HttpCheckLog persistence via repository
 Persist pool check results with HttpCheckLogRepositoryInterface::writeLogs($results). Binding is in AppServiceProvider. Never mass-assign is_successful; writeLogs inserts UUIDv7 ids and JSON-encodes headers.
+
+## writeLogs accepts HttpCheckResult DTOs
+HttpCheckLogRepositoryInterface::writeLogs() takes array<string, HttpCheckResult>, not associative arrays. Read camelCase DTO properties when inserting rows.

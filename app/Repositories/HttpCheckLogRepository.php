@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Contracts\HttpCheckLogRepositoryInterface;
+use App\Data\HttpCheckResult;
 use App\Models\HttpCheckLog;
 use Illuminate\Support\Str;
 
@@ -13,17 +14,7 @@ class HttpCheckLogRepository implements HttpCheckLogRepositoryInterface
     /**
      * Format pool results and insert them into http_check_logs.
      *
-     * @param  array<string, array{
-     *     monitor_id: string,
-     *     status_code: int,
-     *     response_time_ms: int,
-     *     dns_time_ms: int|null,
-     *     tcp_time_ms: int|null,
-     *     tls_time_ms: int|null,
-     *     error_message: string|null,
-     *     response_headers: array<string, mixed>,
-     *     request_headers: array<string, mixed>|null,
-     * }>  $results
+     * @param  array<string, HttpCheckResult>  $results
      */
     public function writeLogs(array $results): int
     {
@@ -33,9 +24,9 @@ class HttpCheckLogRepository implements HttpCheckLogRepositoryInterface
 
         $createdAt = now();
 
-        $rows = array_map(function (array $result) use ($createdAt): array {
-            $statusCode = $result['status_code'];
-            $errorMessage = $result['error_message'];
+        $rows = array_map(function (HttpCheckResult $result) use ($createdAt): array {
+            $statusCode = $result->statusCode;
+            $errorMessage = $result->errorMessage;
 
             if ($statusCode >= 200 && $statusCode <= 299) {
                 $errorMessage = null;
@@ -45,18 +36,18 @@ class HttpCheckLogRepository implements HttpCheckLogRepositoryInterface
 
             return [
                 'id' => (string) Str::uuid7(),
-                'monitor_id' => $result['monitor_id'],
+                'monitor_id' => $result->monitorId,
                 'created_at' => $createdAt,
                 'status_code' => $statusCode,
-                'response_time_ms' => $result['response_time_ms'],
-                'dns_time_ms' => $result['dns_time_ms'],
-                'tcp_time_ms' => $result['tcp_time_ms'],
-                'tls_time_ms' => $result['tls_time_ms'],
+                'response_time_ms' => $result->responseTimeMs,
+                'dns_time_ms' => $result->dnsTimeMs,
+                'tcp_time_ms' => $result->tcpTimeMs,
+                'tls_time_ms' => $result->tlsTimeMs,
                 'error_message' => $errorMessage,
-                'response_headers' => json_encode($result['response_headers'], JSON_THROW_ON_ERROR),
-                'request_headers' => $result['request_headers'] === null
+                'response_headers' => json_encode($result->responseHeaders, JSON_THROW_ON_ERROR),
+                'request_headers' => $result->requestHeaders === null
                     ? null
-                    : json_encode($result['request_headers'], JSON_THROW_ON_ERROR),
+                    : json_encode($result->requestHeaders, JSON_THROW_ON_ERROR),
             ];
         }, array_values($results));
 

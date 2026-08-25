@@ -2,6 +2,7 @@
 
 use App\Contracts\ChunkedRequestProviderInterface;
 use App\Contracts\HttpCheckLogRepositoryInterface;
+use App\Data\HttpCheckResult;
 use App\Models\HttpCheckLog;
 use App\Models\Monitor;
 use App\Models\User;
@@ -53,13 +54,14 @@ test('execute runs pooled requests and returns results keyed by monitor id', fun
 
     expect($results)->toHaveCount(2)
         ->and($results)->toHaveKeys([$ok->id, $notFound->id])
-        ->and($results[$ok->id]['status_code'])->toBe(200)
-        ->and($results[$ok->id]['error_message'])->toBeNull()
-        ->and($results[$ok->id]['response_time_ms'])->toBe(42)
-        ->and($results[$ok->id]['response_headers']['content-type'])->toBe('text/html')
-        ->and($results[$ok->id]['request_headers']['user-agent'])->toBe('PingKit')
-        ->and($results[$notFound->id]['status_code'])->toBe(404)
-        ->and($results[$notFound->id]['error_message'])->toBeNull();
+        ->and($results[$ok->id])->toBeInstanceOf(HttpCheckResult::class)
+        ->and($results[$ok->id]->statusCode)->toBe(200)
+        ->and($results[$ok->id]->errorMessage)->toBeNull()
+        ->and($results[$ok->id]->responseTimeMs)->toBe(42)
+        ->and($results[$ok->id]->responseHeaders['content-type'])->toBe('text/html')
+        ->and($results[$ok->id]->requestHeaders['user-agent'])->toBe('PingKit')
+        ->and($results[$notFound->id]->statusCode)->toBe(404)
+        ->and($results[$notFound->id]->errorMessage)->toBeNull();
 });
 
 test('execute records network failures with status 599', function () {
@@ -79,9 +81,9 @@ test('execute records network failures with status 599', function () {
 
     $results = $service->execute();
 
-    expect($results[$monitor->id]['status_code'])->toBe(HttpCheckPoolService::NETWORK_ERROR_STATUS_CODE)
-        ->and($results[$monitor->id]['error_message'])->toBe('Connection timed out')
-        ->and($results[$monitor->id]['response_headers'])->toBe([]);
+    expect($results[$monitor->id]->statusCode)->toBe(HttpCheckPoolService::NETWORK_ERROR_STATUS_CODE)
+        ->and($results[$monitor->id]->errorMessage)->toBe('Connection timed out')
+        ->and($results[$monitor->id]->responseHeaders)->toBe([]);
 });
 
 test('execute then writeLogs persists a full check cycle', function () {

@@ -10,3 +10,6 @@ Inject App\Contracts\ChunkedRequestProviderInterface, not the concrete ChunkedRe
 
 ## HttpCheckPoolService execute only
 HttpCheckPoolService::execute() returns pool results keyed by monitor id. Persist via HttpCheckLogRepositoryInterface::writeLogs(), not the service. Network failures use status 599 (NETWORK_ERROR_STATUS_CODE). Inject ChunkedRequestProviderInterface; pass a Guzzle Client with MockHandler in tests.
+
+## HttpCheckPoolService returns HttpCheckResult DTOs
+HttpCheckPoolService::execute() returns array<string, HttpCheckResult> keyed by monitor id. Build results via HttpCheckResult::fromResponse() / fromFailure(); persist with HttpCheckLogRepositoryInterface::writeLogs(). Network failures use HttpCheckResult::NETWORK_ERROR_STATUS_CODE (599); the service aliases the same constant.
