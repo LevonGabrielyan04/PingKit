@@ -90,12 +90,12 @@ class MonitorRepository implements MonitorRepositoryInterface
      */
     private function httpMethods(): array
     {
-        return collect(HttpMethod::cases())
-            ->map(fn (HttpMethod $method): array => [
+        return array_map(
+            fn (HttpMethod $method): array => [
                 'value' => $method->value,
                 'label' => $method->label(),
-            ])
-            ->values()
-            ->all();
+            ],
+            HttpMethod::cases(),
+        );
     }
 }
