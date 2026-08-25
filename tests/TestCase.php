@@ -12,6 +12,8 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
+        $this->withoutVite();
+
         $this->app->instance(UncompromisedVerifier::class, new class implements UncompromisedVerifier
         {
             public function verify($data): bool

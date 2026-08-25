@@ -59,6 +59,14 @@ jobs:
         with:
           node-version: '24'
 
+      # Lint only project Dockerfiles (avoid vendor/sail after composer install).
+      - name: Lint Dockerfiles
+        uses: hadolint/hadolint-action@2a66e89f53d0771bb131a7fa31f3136336094aa6 # v3.4.0
+        with:
+          dockerfile: Dockerfile
+          recursive: true
+          failure-threshold: warning
+
       - name: Setup Application
         run: composer setup
 
@@ -78,13 +86,6 @@ jobs:
         run: |
           npm run biome:check
           npm run types:check
-
-      - name: Lint Dockerfiles
-        uses: hadolint/hadolint-action@2a66e89f53d0771bb131a7fa31f3136336094aa6 # v3.4.0
-        with:
-          dockerfile: Dockerfile
-          recursive: true
-          failure-threshold: warning
 
       - name: Run Tests
         run: php artisan test

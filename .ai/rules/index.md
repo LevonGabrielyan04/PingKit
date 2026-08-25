@@ -17,3 +17,5 @@ Before planning or editing, find the row whose globs match the file's path and r
 | app/Repositories/**/*.php | .ai/rules/repositories.md |
 | app/Http/Requests/*Monitor*.php | .ai/rules/requests.md |
 | app/Services/**/*.php, app/Services/HttpCheckPoolService.php | .ai/rules/services.md |
+| tests/**/*.php | .ai/rules/tests.md |
+| .github/workflows/** | .ai/rules/workflows.md |
