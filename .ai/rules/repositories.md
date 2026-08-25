@@ -10,3 +10,6 @@ Create/update/delete Monitor persistence lives in App\Repositories\MonitorReposi
 
 ## Httpable monitors via lazyHttpableById
 Chunked outbound request building loads httpable monitors through MonitorRepositoryInterface::lazyHttpableById(), not Monitor::query() in services. Select only id, url_address, ip_address, request_method, request_headers and use lazyById for chunking.
+
+## HttpCheckLog persistence via repository
+Persist pool check results with HttpCheckLogRepositoryInterface::writeLogs($results). Binding is in AppServiceProvider. Never mass-assign is_successful; writeLogs inserts UUIDv7 ids and JSON-encodes headers.

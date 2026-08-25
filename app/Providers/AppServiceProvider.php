@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Contracts\ChunkedRequestProviderInterface;
+use App\Contracts\HttpCheckLogRepositoryInterface;
 use App\Contracts\MonitorRepositoryInterface;
+use App\Repositories\HttpCheckLogRepository;
 use App\Repositories\MonitorRepository;
 use App\Services\ChunkedRequestProvider;
 use App\Support\PasswordDefaults;
@@ -20,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(MonitorRepositoryInterface::class, MonitorRepository::class);
+        $this->app->bind(HttpCheckLogRepositoryInterface::class, HttpCheckLogRepository::class);
         $this->app->bind(ChunkedRequestProviderInterface::class, ChunkedRequestProvider::class);
     }
 

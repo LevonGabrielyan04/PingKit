@@ -14,7 +14,12 @@ use Illuminate\Validation\ValidationException;
 
 class ChunkedRequestProvider implements ChunkedRequestProviderInterface
 {
-    public function __construct(private MonitorRepositoryInterface $monitors) {}
+    private readonly int $maxChunkSize;
+
+    public function __construct(private MonitorRepositoryInterface $monitors)
+    {
+        $this->maxChunkSize = (int) config('monitors.max_chunk_size');
+    }
 
     /**
      * Yield Guzzle Pool–ready requests for httpable monitors, loaded in chunks.
@@ -23,11 +28,9 @@ class ChunkedRequestProvider implements ChunkedRequestProviderInterface
      */
     public function requests(int $chunkSize = 100): Generator
     {
-        $maxChunkSize = (int) config('monitors.max_chunk_size');
-
-        if ($chunkSize > $maxChunkSize) {
+        if ($chunkSize > $this->maxChunkSize) {
             throw ValidationException::withMessages([
-                'chunkSize' => "Chunk size must be no more than {$maxChunkSize}.",
+                'chunkSize' => "Chunk size must be no more than {$this->maxChunkSize}.",
             ]);
         }
 
