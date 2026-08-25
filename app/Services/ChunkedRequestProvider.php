@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Contracts\ChunkedRequestProviderInterface;
 use App\Models\Monitor;
 use Generator;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
-class ConcurrentRequest
+class ChunkedRequestProvider implements ChunkedRequestProviderInterface
 {
     /**
      * Yield Guzzle Pool–ready requests for httpable monitors, loaded in chunks.

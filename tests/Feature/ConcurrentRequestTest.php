@@ -1,11 +1,17 @@
 <?php
 
+use App\Contracts\ChunkedRequestProviderInterface;
 use App\Enums\HttpMethod;
 use App\Models\Monitor;
 use App\Models\User;
-use App\Services\ConcurrentRequest;
+use App\Services\ChunkedRequestProvider;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Validation\ValidationException;
+
+test('it is bound to the chunked request provider interface', function () {
+    expect(app(ChunkedRequestProviderInterface::class))
+        ->toBeInstanceOf(ChunkedRequestProvider::class);
+});
 
 test('it yields guzzle pool requests for httpable monitors', function () {
     $user = User::factory()->create();
@@ -26,7 +32,7 @@ test('it yields guzzle pool requests for httpable monitors', function () {
         'is_httpable' => false,
     ]);
 
-    $requests = iterator_to_array((new ConcurrentRequest)->requests());
+    $requests = iterator_to_array(app(ChunkedRequestProviderInterface::class)->requests());
 
     expect($requests)->toHaveCount(2)
         ->and($requests)->toHaveKeys([$withUrl->id, $withIp->id])
@@ -43,7 +49,7 @@ test('it formats ipv6 monitor targets for guzzle', function () {
         'is_httpable' => true,
     ]);
 
-    $requests = iterator_to_array((new ConcurrentRequest)->requests());
+    $requests = iterator_to_array(app(ChunkedRequestProviderInterface::class)->requests());
 
     expect((string) $requests[$monitor->id]->getUri())->toBe('http://[2001:db8::1]');
 });
@@ -55,12 +61,12 @@ test('it reads monitors in chunks while yielding requests', function () {
         'is_httpable' => true,
     ]);
 
-    $requests = iterator_to_array((new ConcurrentRequest)->requests(chunkSize: 2));
+    $requests = iterator_to_array(app(ChunkedRequestProviderInterface::class)->requests(chunkSize: 2));
 
     expect($requests)->toHaveCount(5)
         ->and(collect($requests)->every(fn ($request) => $request instanceof Request))->toBeTrue();
 });
 
 test('it rejects chunk sizes greater than 200', function () {
-    (new ConcurrentRequest)->requests(chunkSize: 201);
+    app(ChunkedRequestProviderInterface::class)->requests(chunkSize: 201);
 })->throws(ValidationException::class, 'Chunk size must be no more than 200.');

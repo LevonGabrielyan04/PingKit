@@ -13,3 +13,4 @@ Before planning or editing, find the row whose globs match the file's path and r
 | resources/js/pages/monitors/**/*.{vue,ts} | .ai/rules/monitors.md |
 | app/Repositories/**/*.php | .ai/rules/repositories.md |
 | app/Http/Requests/*Monitor*.php | .ai/rules/requests.md |
+| app/Services/**/*.php | .ai/rules/services.md |
