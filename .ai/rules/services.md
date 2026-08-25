@@ -1,6 +1,7 @@
 ---
 paths:
   - 'app/Services/**/*.php'
+  - app/Services/HttpCheckPoolService.php
 ---
 
 # Services
@@ -16,3 +17,6 @@ HttpCheckPoolService::execute() returns array<string, HttpCheckResult> keyed by 
 
 ## executePage for cursor-scoped pool checks
 HttpCheckPoolService::executePage(?afterId, limit) runs one page via ChunkedRequestProviderInterface::requestsPage(). Use execute() only for full sweeps; Polls jobs must use executePage.
+
+## Dispatch HttpChecksCompleted after pool wait
+After $pool->promise()->wait(), HttpCheckPoolService dispatches HttpChecksCompleted with the array<string, HttpCheckResult> results before returning. Listeners react to that event; do not add side effects inside runPool itself.

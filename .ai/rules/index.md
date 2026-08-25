@@ -10,9 +10,10 @@ Before planning or editing, find the row whose globs match the file's path and r
 | phpunit.xml | .ai/rules/general.md |
 | app/Jobs/**/*.php | .ai/rules/jobs.md |
 | resources/js/**/*.{ts,vue}, resources/js/**/*, resources/css/app.css, vite.config.ts | .ai/rules/js.md |
+| app/Listeners/**/*.php | .ai/rules/listeners.md |
 | database/migrations/** | .ai/rules/migrations.md |
 | app/Models/*.php | .ai/rules/models.md |
 | resources/js/pages/monitors/**/*.{vue,ts} | .ai/rules/monitors.md |
 | app/Repositories/**/*.php | .ai/rules/repositories.md |
 | app/Http/Requests/*Monitor*.php | .ai/rules/requests.md |
-| app/Services/**/*.php | .ai/rules/services.md |
+| app/Services/**/*.php, app/Services/HttpCheckPoolService.php | .ai/rules/services.md |

@@ -125,6 +125,22 @@ class MonitorRepository implements MonitorRepositoryInterface
     }
 
     /**
+     * Stamp checked_at for the given monitor ids.
+     *
+     * @param  list<string>  $monitorIds
+     */
+    public function markCheckedAt(array $monitorIds): int
+    {
+        if ($monitorIds === []) {
+            return 0;
+        }
+
+        return Monitor::query()
+            ->whereIn('id', $monitorIds)
+            ->update(['checked_at' => now()]);
+    }
+
+    /**
      * @return Builder<Monitor>
      */
     private function httpableAfterIdQuery(?string $afterId, int $limit): Builder

@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Contracts\ChunkedRequestProviderInterface;
 use App\Data\HttpCheckResult;
+use App\Events\HttpChecksCompleted;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
@@ -137,6 +138,8 @@ class HttpCheckPoolService
         ]);
 
         $pool->promise()->wait();
+
+        HttpChecksCompleted::dispatch($results);
 
         return $results;
     }

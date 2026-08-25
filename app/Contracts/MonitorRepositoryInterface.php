@@ -59,4 +59,11 @@ interface MonitorRepositoryInterface
      * @return Collection<int, Monitor>
      */
     public function httpablePageAfterId(?string $afterId, int $limit): Collection;
+
+    /**
+     * Stamp checked_at for the given monitor ids.
+     *
+     * @param  list<string>  $monitorIds
+     */
+    public function markCheckedAt(array $monitorIds): int;
 }

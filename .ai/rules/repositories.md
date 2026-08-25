@@ -19,3 +19,6 @@ HttpCheckLogRepositoryInterface::writeLogs() takes array<string, HttpCheckResult
 
 ## Httpable page queries via afterId cursor
 Single-page httpable loads use MonitorRepositoryInterface::httpableIdsAfterId() / httpablePageAfterId(?string $afterId, int $limit)—not unscoped lazyHttpableById() inside Polls chunk jobs. Select the same request columns as lazyHttpableById for pages.
+
+## markCheckedAt bulk-stamps monitors
+MonitorRepositoryInterface::markCheckedAt(list of monitor ids) bulk-updates checked_at to now() and no-ops on an empty id list. Use it from MarkMonitorsCheckedAt, not ad-hoc Monitor::query() updates.

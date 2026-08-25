@@ -3,6 +3,7 @@
 use App\Contracts\ChunkedRequestProviderInterface;
 use App\Contracts\HttpCheckLogRepositoryInterface;
 use App\Data\HttpCheckResult;
+use App\Events\HttpChecksCompleted;
 use App\Models\HttpCheckLog;
 use App\Models\Monitor;
 use App\Models\User;
@@ -13,6 +14,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Support\Facades\Event;
 use Psr\Http\Message\RequestInterface;
 
 test('execute runs pooled requests and returns results keyed by monitor id', function () {
@@ -142,4 +144,30 @@ test('executePage only checks monitors after the cursor for one page', function 
         ->and($results)->toHaveKey($monitors[1]->id)
         ->and($results)->not->toHaveKey($monitors[0]->id)
         ->and($results)->not->toHaveKey($monitors[2]->id);
+});
+
+test('runPool dispatches HttpChecksCompleted after the pool finishes', function () {
+    $monitor = Monitor::factory()->create([
+        'url_address' => 'https://example.com/event',
+        'is_httpable' => true,
+    ]);
+
+    Event::fake([HttpChecksCompleted::class]);
+
+    $mock = new MockHandler([
+        new Response(200),
+    ]);
+
+    $service = new HttpCheckPoolService(
+        app(ChunkedRequestProviderInterface::class),
+        new Client(['handler' => HandlerStack::create($mock)]),
+    );
+
+    $results = $service->execute();
+
+    Event::assertDispatched(HttpChecksCompleted::class, function (HttpChecksCompleted $event) use ($monitor, $results): bool {
+        return $event->results === $results
+            && isset($event->results[$monitor->id])
+            && $event->results[$monitor->id]->statusCode === 200;
+    });
 });
