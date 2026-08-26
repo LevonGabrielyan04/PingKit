@@ -127,26 +127,28 @@ function closeErrorMessage(): void {
 
         <div
             v-if="selectedErrorMessage !== null"
-            class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+            class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 p-4"
             data-test="http-check-log-error-dialog"
             @click.self="closeErrorMessage"
         >
             <div
-                class="nb-dialog orange"
+                class="nb-dialog orange max-h-[calc(100vh-2rem)] w-full"
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="http-check-log-error-title"
             >
                 <div
                     id="http-check-log-error-title"
-                    class="nb-dialog-header"
+                    class="nb-dialog-header shrink-0"
                 >
                     Message
                 </div>
-                <div class="nb-dialog-body whitespace-pre-wrap break-words">
+                <div
+                    class="nb-dialog-body min-h-0 flex-1 overflow-y-auto whitespace-pre-wrap break-words"
+                >
                     {{ selectedErrorMessage }}
                 </div>
-                <div class="nb-dialog-footer">
+                <div class="nb-dialog-footer shrink-0">
                     <button
                         type="button"
                         class="nb-button orange"
