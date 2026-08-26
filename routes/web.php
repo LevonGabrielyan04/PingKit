@@ -17,6 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('monitors', [MonitorController::class, 'store'])->name('monitors.store');
     Route::get('monitors/{monitor}/edit', [MonitorController::class, 'edit'])->name('monitors.edit');
     Route::patch('monitors/{monitor}', [MonitorController::class, 'update'])->name('monitors.update');
+    Route::delete('monitors/{monitor}', [MonitorController::class, 'destroy'])->name('monitors.destroy');
 });
 
 require __DIR__.'/settings.php';

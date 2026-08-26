@@ -10,12 +10,25 @@ use App\Http\Requests\UpdateMonitorRequest;
 use App\Models\Monitor;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Response;
 
-class MonitorController extends Controller
+class MonitorController extends Controller implements HasMiddleware
 {
     public function __construct(private MonitorRepositoryInterface $monitors) {}
+
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('can:viewAny,'.Monitor::class, only: ['index']),
+            new Middleware('can:view,monitor', only: ['edit']),
+            new Middleware('can:delete,monitor', only: ['destroy']),
+        ];
+    }
 
     /**
      * Display the monitors page.
@@ -48,8 +61,6 @@ class MonitorController extends Controller
      */
     public function edit(Monitor $monitor): Response
     {
-        Gate::authorize('update', $monitor);
-
         return $this->monitors->edit($monitor);
     }
 
@@ -59,6 +70,16 @@ class MonitorController extends Controller
     public function update(UpdateMonitorRequest $request, Monitor $monitor): RedirectResponse
     {
         $this->monitors->update($monitor, $request->validated());
+
+        return to_route('monitors.index');
+    }
+
+    /**
+     * Remove the specified monitor.
+     */
+    public function destroy(Monitor $monitor): RedirectResponse
+    {
+        $this->monitors->delete($monitor);
 
         return to_route('monitors.index');
     }

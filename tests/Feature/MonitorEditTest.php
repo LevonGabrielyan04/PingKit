@@ -12,6 +12,14 @@ test('guests are redirected from the monitor edit page', function () {
         ->assertRedirect(route('login'));
 });
 
+test('guests cannot see another users monitor', function () {
+    $owner = User::factory()->create();
+    $monitor = Monitor::factory()->for($owner)->create();
+
+    $this->get(route('monitors.edit', $monitor))
+        ->assertRedirect(route('login'));
+});
+
 test('authenticated users can visit the monitor edit page for their monitor', function () {
     $user = User::factory()->create();
     $monitor = Monitor::factory()->for($user)->create([

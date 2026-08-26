@@ -40,6 +40,11 @@ interface MonitorRepositoryInterface
     public function update(Monitor $monitor, array $data): Monitor;
 
     /**
+     * Delete the given monitor.
+     */
+    public function delete(Monitor $monitor): void;
+
+    /**
      * Stream httpable monitors in id-ordered chunks for outbound request building.
      *
      * @return LazyCollection<int, Monitor>

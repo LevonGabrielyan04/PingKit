@@ -14,3 +14,6 @@ GET /http/errors is HttpCheckLogController@index (not Route::inertia). GET /http
 
 ## Http page passes pagination meta
 HttpCheckLogController@index still passes logs as HttpCheckLogData->toArray() items, plus a pagination prop: current_page, last_page, per_page, total from paginateFailed(). Do not drop pagination when changing the Http Inertia payload.
+
+## MonitorController auth via HasMiddleware
+MonitorController implements HasMiddleware and maps can middleware to MonitorPolicy (viewAny→index, view→edit, delete→destroy). Do not call Gate::authorize in action methods. create/update stay on Form Requests.

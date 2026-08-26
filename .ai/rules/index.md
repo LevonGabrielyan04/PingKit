@@ -18,6 +18,7 @@ Before planning or editing, find the row whose globs match the file's path and r
 | database/migrations/** | .ai/rules/migrations.md |
 | app/Models/*.php | .ai/rules/models.md |
 | resources/js/pages/monitors/**/*.{vue,ts} | .ai/rules/monitors.md |
+| app/Policies/MonitorPolicy.php | .ai/rules/policies.md |
 | app/Providers/AppServiceProvider.php | .ai/rules/providers.md |
 | app/Repositories/**/*.php, app/Repositories/HttpCheckLogRepository.php | .ai/rules/repositories.md |
 | app/Http/Requests/*Monitor*.php | .ai/rules/requests.md |

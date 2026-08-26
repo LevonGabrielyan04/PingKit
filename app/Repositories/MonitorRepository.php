@@ -89,6 +89,14 @@ class MonitorRepository implements MonitorRepositoryInterface
     }
 
     /**
+     * Delete the given monitor.
+     */
+    public function delete(Monitor $monitor): void
+    {
+        $monitor->delete();
+    }
+
+    /**
      * Stream httpable monitors in id-ordered chunks for outbound request building.
      *
      * @return LazyCollection<int, Monitor>
