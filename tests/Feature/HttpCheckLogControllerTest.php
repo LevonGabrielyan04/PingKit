@@ -40,6 +40,48 @@ test('authenticated users see only their failed http check logs as dto arrays', 
             ->where('logs.0.created_at', $failed->created_at->toIso8601String())
             ->missing('logs.0.monitor_id')
             ->missing('logs.0.is_successful')
+            ->where('pagination.current_page', 1)
+            ->where('pagination.last_page', 1)
+            ->where('pagination.per_page', 15)
+            ->where('pagination.total', 1)
+        );
+});
+
+test('authenticated users can browse failed http check logs beyond the first page', function () {
+    $user = User::factory()->create();
+    $monitor = Monitor::factory()->for($user)->create();
+
+    $logs = collect(range(0, 15))->map(
+        fn (int $index) => HttpCheckLog::factory()->for($monitor)->failed()->create([
+            'created_at' => now()->subMinutes($index),
+        ]),
+    );
+
+    $newest = $logs->sortByDesc('created_at')->values();
+
+    $this->actingAs($user)
+        ->get(route('http'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('Http')
+            ->has('logs', 15)
+            ->where('logs.0.id', $newest[0]->id)
+            ->where('pagination.current_page', 1)
+            ->where('pagination.last_page', 2)
+            ->where('pagination.per_page', 15)
+            ->where('pagination.total', 16)
+        );
+
+    $this->actingAs($user)
+        ->get(route('http', ['page' => 2]))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('Http')
+            ->has('logs', 1)
+            ->where('logs.0.id', $newest[15]->id)
+            ->where('pagination.current_page', 2)
+            ->where('pagination.last_page', 2)
+            ->where('pagination.total', 16)
         );
 });
 

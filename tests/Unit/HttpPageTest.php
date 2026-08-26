@@ -6,7 +6,14 @@ test('the http page includes the http check logs table', function () {
     expect($page)
         ->toContain('Head title="Http"')
         ->toContain('HttpCheckLogsTable')
-        ->toContain(':logs="logs"');
+        ->toContain(':logs="logs"')
+        ->toContain('data-test="http-check-logs-pagination"')
+        ->toContain('data-test="http-check-logs-prev"')
+        ->toContain('data-test="http-check-logs-next"')
+        ->toContain('data-test="http-check-logs-page-status"')
+        ->toContain('Previous')
+        ->toContain('Next')
+        ->toContain('http({ query: { page } })');
 });
 
 test('the http check logs table reflects http_check_logs fields', function () {

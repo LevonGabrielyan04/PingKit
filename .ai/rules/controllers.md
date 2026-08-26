@@ -11,3 +11,6 @@ Type-hint App\Contracts\MonitorRepositoryInterface in controllers, not the concr
 
 ## Http page served by HttpCheckLogController
 GET /http is HttpCheckLogController@index (not Route::inertia). Inject HttpCheckLogRepositoryInterface, call paginateFailed($request->user()), pass logs as an array of HttpCheckLogData->toArray() to Inertia Http.
+
+## Http page passes pagination meta
+HttpCheckLogController@index still passes logs as HttpCheckLogData->toArray() items, plus a pagination prop: current_page, last_page, per_page, total from paginateFailed(). Do not drop pagination when changing the Http Inertia payload.

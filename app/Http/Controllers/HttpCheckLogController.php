@@ -26,6 +26,12 @@ class HttpCheckLogController extends Controller
                 fn (HttpCheckLogData $log): array => $log->toArray(),
                 $logs->items(),
             ),
+            'pagination' => [
+                'current_page' => $logs->currentPage(),
+                'last_page' => $logs->lastPage(),
+                'per_page' => $logs->perPage(),
+                'total' => $logs->total(),
+            ],
         ]);
     }
 }
