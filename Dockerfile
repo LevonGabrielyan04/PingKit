@@ -26,12 +26,12 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 COPY . .
 
+# Ensure PHP-FPM worker pool runs as the same non-root user.
 RUN set -eux; \
     groupadd -g 1000 app; \
     useradd -m -u 1000 -g app app; \
     mkdir -p storage bootstrap/cache; \
     chown -R app:app /var/www/html/storage /var/www/html/bootstrap/cache; \
-    # Ensure PHP-FPM worker pool runs as the same non-root user.
     if [ -f /usr/local/etc/php-fpm.d/www.conf ]; then \
       sed -ri 's/^user = .*/user = app/; s/^group = .*/group = app/; s/^listen\.owner = .*/listen.owner = app/; s/^listen\.group = .*/listen.group = app/' /usr/local/etc/php-fpm.d/www.conf; \
     fi; \

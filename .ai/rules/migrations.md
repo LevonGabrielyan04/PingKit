@@ -19,3 +19,6 @@ monitors.checked_at is a nullable timestamp with an index. It tracks when a moni
 
 ## Monitor checked_at is nullable indexed timestamp
 monitors.checked_at is a nullable timestamp with an index. It tracks when a monitor was last checked; leave null until the first check. Cast it to datetime on the Monitor model and keep it in Fillable.
+
+## Composite indexes need a column array
+`$table->index('col_a', 'col_b')` treats the second argument as the index *name*, not a second column — you get a single-column index named `col_b`. For a composite index use `$table->index(['col_a', 'col_b'])`.

@@ -26,8 +26,7 @@ return new class extends Migration
             $table->json('response_headers');
             $table->json('request_headers')->nullable();
 
-            $table->index('created_at', 'is_successful');
-            $table->index('created_at');
+            $table->index(['created_at', 'is_successful']);
             $table->index(['monitor_id', 'created_at']);
             $table->index(['monitor_id', 'status_code']);
         });

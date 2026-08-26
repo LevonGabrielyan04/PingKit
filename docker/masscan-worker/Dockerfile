@@ -1,5 +1,6 @@
 FROM php:8.5-cli
 
+# masscan build dependencies: gcc, make, libpcap-dev
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     curl \
@@ -9,7 +10,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libonig-dev \
     libssl-dev \
     supervisor \
-    # masscan build dependencies
     gcc \
     make \
     libpcap-dev \
