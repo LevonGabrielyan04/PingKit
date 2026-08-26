@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref, watch } from 'vue';
+
 export type HttpCheckLogRow = {
     id: string;
     target: string;
@@ -19,6 +21,23 @@ const props = withDefaults(defineProps<Props>(), {
     logs: () => [],
 });
 
+const selectedErrorMessage = ref<string | null>(null);
+
+watch(selectedErrorMessage, (message, _previous, onCleanup) => {
+    if (message === null) {
+        return;
+    }
+
+    function onKeydown(event: KeyboardEvent): void {
+        if (event.key === 'Escape') {
+            closeErrorMessage();
+        }
+    }
+
+    window.addEventListener('keydown', onKeydown);
+    onCleanup(() => window.removeEventListener('keydown', onKeydown));
+});
+
 function formatNullableMs(value: number | null): string {
     if (value === null) {
         return '—';
@@ -35,6 +54,14 @@ function formatCheckedAt(value: string): string {
     }
 
     return date.toLocaleString();
+}
+
+function openErrorMessage(message: string): void {
+    selectedErrorMessage.value = message;
+}
+
+function closeErrorMessage(): void {
+    selectedErrorMessage.value = null;
 }
 </script>
 
@@ -81,10 +108,55 @@ function formatCheckedAt(value: string): string {
                         <td>{{ formatNullableMs(log.dns_time_ms) }}</td>
                         <td>{{ formatNullableMs(log.tcp_time_ms) }}</td>
                         <td>{{ formatNullableMs(log.tls_time_ms) }}</td>
-                        <td>{{ log.error_message ?? '—' }}</td>
+                        <td>
+                            <button
+                                v-if="log.error_message"
+                                type="button"
+                                class="nb-button orange"
+                                data-test="http-check-log-error-button"
+                                @click="openErrorMessage(log.error_message)"
+                            >
+                                Message
+                            </button>
+                            <template v-else>—</template>
+                        </td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div
+            v-if="selectedErrorMessage !== null"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+            data-test="http-check-log-error-dialog"
+            @click.self="closeErrorMessage"
+        >
+            <div
+                class="nb-dialog orange"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="http-check-log-error-title"
+            >
+                <div
+                    id="http-check-log-error-title"
+                    class="nb-dialog-header"
+                >
+                    Message
+                </div>
+                <div class="nb-dialog-body whitespace-pre-wrap break-words">
+                    {{ selectedErrorMessage }}
+                </div>
+                <div class="nb-dialog-footer">
+                    <button
+                        type="button"
+                        class="nb-button orange"
+                        data-test="http-check-log-error-hide"
+                        @click="closeErrorMessage"
+                    >
+                        Hide
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </template>

@@ -2,8 +2,9 @@
 paths:
   - 'resources/js/**/*.{ts,vue}'
   - 'resources/js/**/*'
-  - 'resources/css/app.css'
-  - 'vite.config.ts'
+  - resources/css/app.css
+  - vite.config.ts
+  - 'resources/js/**/*.{vue,ts}'
 ---
 
 # Js
@@ -19,3 +20,6 @@ When adding an element color in Vue/JS (status text, highlights, accent colors, 
 
 ## Override nb-form-group radio label display
 NeoBrutalismCSS `.nb-form-group label { display: block }` overrides `.nb-radio + label { display: inline-flex; align-items: center }`. Keep the unlayered fix in app.css: `.nb-form-group .nb-radio + label { display: inline-flex; align-items: center; margin-bottom: 0 }` so option text stays aligned with the fake radio circle.
+
+## NeoBrutalism overlays use nb-dialog (no modal)
+NeoBrutalismCSS has no modal component. For overlays/pop-ups use its Dialog: a root `nb-dialog` (prefer `orange`) with `nb-dialog-header`, `nb-dialog-body`, and an `nb-dialog-footer` that contains a single Hide control (`nb-button`, prefer orange) — no other action buttons. Do not invent modal classes or reach for shadcn/reka Dialog styling on NeoBrutalism surfaces.
