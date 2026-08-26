@@ -34,6 +34,12 @@ class HttpCheckLogRepository implements HttpCheckLogRepositoryInterface
                 $errorMessage = Str::limit($errorMessage, 255, '');
             }
 
+            $responseHeaders = json_encode($result->responseHeaders, JSON_THROW_ON_ERROR);
+
+            if (mb_strlen($responseHeaders, 'UTF-8') > 5000) {
+                $responseHeaders = null;
+            }
+
             return [
                 'id' => (string) Str::uuid7(),
                 'monitor_id' => $result->monitorId,
@@ -44,7 +50,7 @@ class HttpCheckLogRepository implements HttpCheckLogRepositoryInterface
                 'tcp_time_ms' => $result->tcpTimeMs,
                 'tls_time_ms' => $result->tlsTimeMs,
                 'error_message' => $errorMessage,
-                'response_headers' => json_encode($result->responseHeaders, JSON_THROW_ON_ERROR),
+                'response_headers' => $responseHeaders,
                 'request_headers' => $result->requestHeaders === null
                     ? null
                     : json_encode($result->requestHeaders, JSON_THROW_ON_ERROR),

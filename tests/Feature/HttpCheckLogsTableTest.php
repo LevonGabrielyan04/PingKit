@@ -111,6 +111,37 @@ test('error_message can be stored for non-2xx status codes', function () {
         ->and($log->tls_time_ms)->toBe(15);
 });
 
+test('response_headers longer than 5000 characters are rejected', function () {
+    insertHttpCheckLog([
+        'response_headers' => json_encode(['x-big' => str_repeat('a', 5000)]),
+    ]);
+})->throws(QueryException::class);
+
+test('response_headers at most 5000 characters can be stored', function () {
+    $prefix = '{"a":"';
+    $suffix = '"}';
+    $headers = $prefix.str_repeat('b', 5000 - strlen($prefix) - strlen($suffix)).$suffix;
+    expect(mb_strlen($headers, 'UTF-8'))->toBe(5000);
+
+    insertHttpCheckLog([
+        'response_headers' => $headers,
+    ]);
+
+    $log = DB::table('http_check_logs')->sole();
+
+    expect(mb_strlen((string) $log->response_headers, 'UTF-8'))->toBe(5000);
+});
+
+test('null response_headers can be stored', function () {
+    insertHttpCheckLog([
+        'response_headers' => null,
+    ]);
+
+    $log = DB::table('http_check_logs')->sole();
+
+    expect($log->response_headers)->toBeNull();
+});
+
 /**
  * @param  array<string, mixed>  $overrides
  */

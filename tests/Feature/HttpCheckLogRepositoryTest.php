@@ -80,3 +80,19 @@ test('writeLogs returns zero when there are no results', function () {
     expect(app(HttpCheckLogRepositoryInterface::class)->writeLogs([]))->toBe(0)
         ->and(HttpCheckLog::query()->count())->toBe(0);
 });
+
+test('writeLogs stores null response_headers when encoded JSON exceeds 5000 characters', function () {
+    $monitor = Monitor::factory()->create(['is_httpable' => true]);
+
+    $request = new Request('GET', 'https://example.com');
+    $response = new Response(200, ['X-Big' => str_repeat('a', 5000)], 'ok');
+
+    app(HttpCheckLogRepositoryInterface::class)->writeLogs([
+        $monitor->id => HttpCheckResult::fromResponse($monitor->id, $response, null, $request),
+    ]);
+
+    $log = HttpCheckLog::query()->sole();
+
+    expect($log->response_headers)->toBeNull()
+        ->and($log->status_code)->toBe(200);
+});

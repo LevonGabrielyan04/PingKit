@@ -22,3 +22,6 @@ monitors.checked_at is a nullable timestamp with an index. It tracks when a moni
 
 ## Composite indexes need a column array
 `$table->index('col_a', 'col_b')` treats the second argument as the index *name*, not a second column — you get a single-column index named `col_b`. For a composite index use `$table->index(['col_a', 'col_b'])`.
+
+## http_check_logs response_headers max length
+http_check_logs.response_headers has CHECK http_check_logs_response_headers_max_length: null or CHAR_LENGTH(CAST(as char)) <= 5000. writeLogs nulls oversized encoded JSON before insert so inserts do not violate the constraint.

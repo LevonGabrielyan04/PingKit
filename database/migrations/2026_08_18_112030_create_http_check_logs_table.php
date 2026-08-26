@@ -34,6 +34,7 @@ return new class extends Migration
 
         DB::statement('alter table `http_check_logs` add constraint `http_check_logs_status_code_range` check (`status_code` between 100 and 999)');
         DB::statement('alter table `http_check_logs` add constraint `http_check_logs_error_message_not_successful` check (`error_message` is null or `status_code` not between 200 and 299)');
+        DB::statement('alter table `http_check_logs` add constraint `http_check_logs_response_headers_max_length` check (`response_headers` is null or char_length(cast(`response_headers` as char)) <= 5000)');
     }
 
     /**
