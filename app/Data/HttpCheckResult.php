@@ -74,7 +74,7 @@ final readonly class HttpCheckResult
             dnsTimeMs: $timings['dns_time_ms'],
             tcpTimeMs: $timings['tcp_time_ms'],
             tlsTimeMs: $timings['tls_time_ms'],
-            errorMessage: Str::limit($errorMessage, 255, ''),
+            errorMessage: Str::limit($errorMessage, 3000, ''),
             responseHeaders: [],
             requestHeaders: $request === null ? null : self::normalizeHeaders($request->getHeaders()),
         );

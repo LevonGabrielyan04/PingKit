@@ -14,5 +14,8 @@ test('authenticated users can visit the http page', function () {
 
     $this->get(route('http'))
         ->assertOk()
-        ->assertInertia(fn (Assert $page) => $page->component('Http'));
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('Http')
+            ->has('logs', 0)
+        );
 });

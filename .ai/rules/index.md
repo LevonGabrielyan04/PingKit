@@ -5,7 +5,7 @@ Before planning or editing, find the row whose globs match the file's path and r
 | Applies to | Rule file |
 | --- | --- |
 | resources/js/components/MonitorForm.vue, resources/js/components/{AppSidebar,NavMain,NavUser,AppLogo,AppSidebarHeader,Breadcrumbs}.vue | .ai/rules/components.md |
-| app/Http/Controllers/MonitorController.php | .ai/rules/controllers.md |
+| app/Http/Controllers/MonitorController.php, app/Http/Controllers/HttpCheckLogController.php | .ai/rules/controllers.md |
 | app/Data/**/*.php | .ai/rules/data.md |
 | phpunit.xml | .ai/rules/general.md |
 | app/Jobs/**/*.php, app/Jobs/PruneHttpCheckLogs.php | .ai/rules/jobs.md |

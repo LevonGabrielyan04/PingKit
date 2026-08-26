@@ -17,13 +17,17 @@ test('the http check logs table reflects http_check_logs fields', function () {
         ->toContain('data-test="http-check-logs-list"')
         ->toContain('data-test="http-check-log-item"')
         ->toContain('nb-table orange bordered')
-        ->toContain('monitor_id')
+        ->toContain('>Target</')
+        ->toContain('log.target')
         ->toContain('status_code')
-        ->toContain('is_successful')
         ->toContain('response_time_ms')
         ->toContain('dns_time_ms')
         ->toContain('tcp_time_ms')
         ->toContain('tls_time_ms')
         ->toContain('error_message')
-        ->toContain('created_at');
+        ->toContain('created_at')
+        ->not->toContain('monitor_id')
+        ->not->toContain('is_successful')
+        ->not->toContain('>Result</')
+        ->not->toContain('>Monitor</');
 });

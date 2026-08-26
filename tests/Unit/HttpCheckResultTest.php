@@ -59,3 +59,14 @@ test('fromFailure builds a network error result', function () {
         ->and($result->responseHeaders)->toBe([])
         ->and($result->requestHeaders['x-check'])->toBe('1');
 });
+
+test('fromFailure truncates error messages longer than 3000 characters', function () {
+    $result = HttpCheckResult::fromFailure(
+        'monitor-1',
+        str_repeat('a', 3001),
+        null,
+        null,
+    );
+
+    expect(mb_strlen((string) $result->errorMessage, 'UTF-8'))->toBe(3000);
+});

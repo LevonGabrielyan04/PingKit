@@ -25,3 +25,6 @@ monitors.checked_at is a nullable timestamp with an index. It tracks when a moni
 
 ## http_check_logs response_headers max length
 http_check_logs.response_headers has CHECK http_check_logs_response_headers_max_length: null or CHAR_LENGTH(CAST(as char)) <= 5000. writeLogs nulls oversized encoded JSON before insert so inserts do not violate the constraint.
+
+## http_check_logs error_message max length
+http_check_logs.error_message is nullable text with CHECK http_check_logs_error_message_max_length: null or CHAR_LENGTH <= 3000. HttpCheckResult::fromFailure and writeLogs truncate with Str::limit(..., 3000, '') so inserts do not violate the constraint.

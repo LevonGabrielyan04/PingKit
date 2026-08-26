@@ -1,14 +1,17 @@
 <?php
 
 use App\Contracts\HttpCheckLogRepositoryInterface;
+use App\Data\HttpCheckLogData;
 use App\Data\HttpCheckResult;
 use App\Models\HttpCheckLog;
 use App\Models\Monitor;
+use App\Models\User;
 use App\Repositories\HttpCheckLogRepository;
 use App\Services\HttpCheckPoolService;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\TransferStats;
+use Illuminate\Pagination\Paginator;
 
 test('it is bound to the http check log repository interface', function () {
     expect(app(HttpCheckLogRepositoryInterface::class))
@@ -95,4 +98,61 @@ test('writeLogs stores null response_headers when encoded JSON exceeds 5000 char
 
     expect($log->response_headers)->toBeNull()
         ->and($log->status_code)->toBe(200);
+});
+
+test('paginateFailed returns only the users unsuccessful logs as dtos', function () {
+    $user = User::factory()->create();
+    $otherUser = User::factory()->create();
+
+    $monitor = Monitor::factory()->for($user)->create();
+    $otherMonitor = Monitor::factory()->for($otherUser)->create();
+
+    $failedNewer = HttpCheckLog::factory()->for($monitor)->failed(500, 'server error')->create([
+        'created_at' => now()->subMinute(),
+    ]);
+    $failedOlder = HttpCheckLog::factory()->for($monitor)->failed(404, 'not found')->create([
+        'created_at' => now()->subHour(),
+    ]);
+    HttpCheckLog::factory()->for($monitor)->create(['status_code' => 200]);
+    HttpCheckLog::factory()->for($otherMonitor)->failed()->create();
+
+    $page = app(HttpCheckLogRepositoryInterface::class)->paginateFailed($user, perPage: 1);
+
+    expect($page->total())->toBe(2)
+        ->and($page->count())->toBe(1)
+        ->and($page->items()[0])->toBeInstanceOf(HttpCheckLogData::class)
+        ->and($page->items()[0]->toArray())->toMatchArray([
+            'id' => $failedNewer->id,
+            'target' => $monitor->url_address,
+            'status_code' => 500,
+            'error_message' => 'server error',
+        ])
+        ->and($page->items()[0]->toArray())->not->toHaveKeys(['monitor_id', 'is_successful']);
+
+    Paginator::currentPageResolver(fn (): int => 2);
+
+    $secondPage = app(HttpCheckLogRepositoryInterface::class)->paginateFailed($user, perPage: 1);
+
+    expect($secondPage->items()[0]->id)->toBe($failedOlder->id);
+});
+
+test('paginateFailed target prefers url_address and falls back to ip_address', function () {
+    $user = User::factory()->create();
+    $urlMonitor = Monitor::factory()->for($user)->create([
+        'url_address' => 'https://example.com',
+        'ip_address' => null,
+    ]);
+    $ipMonitor = Monitor::factory()->for($user)->ipAddress('192.0.2.10')->create();
+
+    HttpCheckLog::factory()->for($urlMonitor)->failed()->create([
+        'created_at' => now()->subMinute(),
+    ]);
+    HttpCheckLog::factory()->for($ipMonitor)->failed()->create([
+        'created_at' => now()->subHour(),
+    ]);
+
+    $page = app(HttpCheckLogRepositoryInterface::class)->paginateFailed($user, perPage: 15);
+
+    expect($page->items()[0]->target)->toBe('https://example.com')
+        ->and($page->items()[1]->target)->toBe('192.0.2.10');
 });

@@ -1,10 +1,9 @@
 <script setup lang="ts">
 export type HttpCheckLogRow = {
     id: string;
-    monitor_id: string;
+    target: string;
     created_at: string;
     status_code: number;
-    is_successful: boolean;
     response_time_ms: number;
     dns_time_ms: number | null;
     tcp_time_ms: number | null;
@@ -47,7 +46,7 @@ function formatCheckedAt(value: string): string {
             data-test="http-check-logs-empty"
         >
             <div class="nb-card-content">
-                <p class="nb-card-text">No HTTP check logs yet.</p>
+                <p class="nb-card-text">No failed HTTP check logs yet.</p>
             </div>
         </div>
 
@@ -60,9 +59,8 @@ function formatCheckedAt(value: string): string {
                 <thead>
                     <tr>
                         <th scope="col">Checked at</th>
-                        <th scope="col">Monitor</th>
+                        <th scope="col">Target</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Result</th>
                         <th scope="col">Response</th>
                         <th scope="col">DNS</th>
                         <th scope="col">TCP</th>
@@ -77,11 +75,8 @@ function formatCheckedAt(value: string): string {
                         data-test="http-check-log-item"
                     >
                         <td>{{ formatCheckedAt(log.created_at) }}</td>
-                        <td class="font-mono text-xs">{{ log.monitor_id }}</td>
+                        <td>{{ log.target }}</td>
                         <td>{{ log.status_code }}</td>
-                        <td>
-                            {{ log.is_successful ? 'Successful' : 'Failed' }}
-                        </td>
                         <td>{{ log.response_time_ms }} ms</td>
                         <td>{{ formatNullableMs(log.dns_time_ms) }}</td>
                         <td>{{ formatNullableMs(log.tcp_time_ms) }}</td>

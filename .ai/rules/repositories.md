@@ -29,3 +29,6 @@ httpableAfterIdQuery (used by httpableIdsAfterId / httpablePageAfterId) only ret
 
 ## HttpCheckLog prune methods on repository
 Successful logs older than 48 hours and all logs older than one month are deleted via HttpCheckLogRepositoryInterface prune methods. Never mass-assign is_successful; filter on the generated column when pruning.
+
+## paginateFailed returns user-scoped DTOs
+HttpCheckLogRepositoryInterface::paginateFailed(User, perPage) returns a LengthAwarePaginator of HttpCheckLogData for is_successful=false logs belonging to the user's monitors (whereHas monitor.user_id). Select DTO columns plus monitor_id, eager-load monitor:id,url_address,ip_address (no header JSON). Map via HttpCheckLogData::fromModel().

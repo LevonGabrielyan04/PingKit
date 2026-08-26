@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Contracts\HttpCheckLogRepositoryInterface;
+use App\Data\HttpCheckLogData;
 use App\Data\HttpCheckResult;
 use App\Models\HttpCheckLog;
+use App\Models\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class HttpCheckLogRepository implements HttpCheckLogRepositoryInterface
@@ -31,7 +35,7 @@ class HttpCheckLogRepository implements HttpCheckLogRepositoryInterface
             if ($statusCode >= 200 && $statusCode <= 299) {
                 $errorMessage = null;
             } elseif ($errorMessage !== null) {
-                $errorMessage = Str::limit($errorMessage, 255, '');
+                $errorMessage = Str::limit($errorMessage, 3000, '');
             }
 
             $responseHeaders = json_encode($result->responseHeaders, JSON_THROW_ON_ERROR);
@@ -60,6 +64,36 @@ class HttpCheckLogRepository implements HttpCheckLogRepositoryInterface
         HttpCheckLog::query()->insert($rows);
 
         return count($rows);
+    }
+
+    /**
+     * Paginate unsuccessful HTTP check logs for the given user as DTOs.
+     *
+     * @return LengthAwarePaginator<int, HttpCheckLogData>
+     */
+    public function paginateFailed(User $user, int $perPage = 15): LengthAwarePaginator
+    {
+        return HttpCheckLog::query()
+            ->select([
+                'id',
+                'monitor_id',
+                'created_at',
+                'status_code',
+                'response_time_ms',
+                'dns_time_ms',
+                'tcp_time_ms',
+                'tls_time_ms',
+                'error_message',
+            ])
+            ->with('monitor:id,url_address,ip_address')
+            ->where('is_successful', false)
+            ->whereHas(
+                'monitor',
+                fn (Builder $query): Builder => $query->where('user_id', $user->id),
+            )
+            ->latest('created_at')
+            ->paginate($perPage)
+            ->through(fn (HttpCheckLog $log): HttpCheckLogData => HttpCheckLogData::fromModel($log));
     }
 
     /**

@@ -37,6 +37,7 @@ test('http check logs table has the expected columns and generated is_successful
         ->and($columns['dns_time_ms']['nullable'])->toBeTrue()
         ->and($columns['tcp_time_ms']['nullable'])->toBeTrue()
         ->and($columns['tls_time_ms']['nullable'])->toBeTrue()
+        ->and($columns['error_message']['type_name'])->toBe('text')
         ->and($columns['error_message']['nullable'])->toBeTrue()
         ->and($columns['response_headers']['nullable'])->toBeTrue()
         ->and($columns['request_headers']['nullable'])->toBeTrue();
@@ -109,6 +110,26 @@ test('error_message can be stored for non-2xx status codes', function () {
         ->and($log->dns_time_ms)->toBe(5)
         ->and($log->tcp_time_ms)->toBe(10)
         ->and($log->tls_time_ms)->toBe(15);
+});
+
+test('error_message longer than 3000 characters is rejected', function () {
+    insertHttpCheckLog([
+        'status_code' => 500,
+        'error_message' => str_repeat('a', 3001),
+    ]);
+})->throws(QueryException::class);
+
+test('error_message at most 3000 characters can be stored', function () {
+    $message = str_repeat('b', 3000);
+
+    insertHttpCheckLog([
+        'status_code' => 500,
+        'error_message' => $message,
+    ]);
+
+    $log = DB::table('http_check_logs')->sole();
+
+    expect(mb_strlen((string) $log->error_message, 'UTF-8'))->toBe(3000);
 });
 
 test('response_headers longer than 5000 characters are rejected', function () {
