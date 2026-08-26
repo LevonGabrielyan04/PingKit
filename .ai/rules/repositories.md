@@ -1,6 +1,7 @@
 ---
 paths:
   - 'app/Repositories/**/*.php'
+  - app/Repositories/HttpCheckLogRepository.php
 ---
 
 # Repositories
@@ -25,3 +26,6 @@ MonitorRepositoryInterface::markCheckedAt(list of monitor ids) bulk-updates chec
 
 ## Httpable pages skip recent checked_at
 httpableAfterIdQuery (used by httpableIdsAfterId / httpablePageAfterId) only returns httpable monitors whose checked_at is null or older than 60 seconds. Recently checked monitors are excluded so Polls jobs do not re-check within the cooldown.
+
+## HttpCheckLog prune methods on repository
+Successful logs older than 48 hours and all logs older than one month are deleted via HttpCheckLogRepositoryInterface prune methods. Never mass-assign is_successful; filter on the generated column when pruning.

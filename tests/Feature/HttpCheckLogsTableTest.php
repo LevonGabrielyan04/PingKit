@@ -48,6 +48,7 @@ test('http check logs table has the expected columns and generated is_successful
         ->and($foreign['foreign_table'])->toBe('monitors')
         ->and($foreign['foreign_columns'])->toBe(['id'])
         ->and($foreign['on_delete'])->toBe('cascade')
+        ->and(Schema::hasIndex('http_check_logs', ['created_at', 'is_successful']))->toBeTrue()
         ->and(Schema::hasIndex('http_check_logs', ['monitor_id', 'created_at']))->toBeTrue()
         ->and(Schema::hasIndex('http_check_logs', ['monitor_id', 'status_code']))->toBeTrue();
 });

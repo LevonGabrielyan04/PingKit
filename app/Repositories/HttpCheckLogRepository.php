@@ -55,4 +55,25 @@ class HttpCheckLogRepository implements HttpCheckLogRepositoryInterface
 
         return count($rows);
     }
+
+    /**
+     * Delete successful HTTP check logs older than 48 hours.
+     */
+    public function deleteSuccessfulOlderThan48Hours(): int
+    {
+        return HttpCheckLog::query()
+            ->where('is_successful', true)
+            ->where('created_at', '<', now()->subHours(48))
+            ->delete();
+    }
+
+    /**
+     * Delete all HTTP check logs older than one month.
+     */
+    public function deleteOlderThanOneMonth(): int
+    {
+        return HttpCheckLog::query()
+            ->where('created_at', '<', now()->subMonth())
+            ->delete();
+    }
 }
