@@ -1,10 +1,11 @@
 <?php
 
-test('the http page includes the http check logs table', function () {
-    $page = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/Http.vue');
+test('the http errors page includes the http check logs table', function () {
+    $page = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/http/Errors.vue');
 
     expect($page)
-        ->toContain('Head title="Http"')
+        ->toContain('Head title="Http Errors"')
+        ->toContain('HttpNavbar')
         ->toContain('HttpCheckLogsTable')
         ->toContain(':logs="logs"')
         ->toContain('Pagination')
@@ -13,8 +14,18 @@ test('the http page includes the http check logs table', function () {
         ->toContain(':page-href="pageHref"')
         ->toContain('test-id="http-check-logs"')
         ->toContain('usePageHref')
-        ->toContain('usePageHref(http)')
+        ->toContain('usePageHref(errors)')
         ->not->toContain('data-test="http-check-logs-page-status"');
+});
+
+test('the http analytics page is empty besides the navbar', function () {
+    $page = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/http/Analytics.vue');
+
+    expect($page)
+        ->toContain('Head title="Http Analytics"')
+        ->toContain('HttpNavbar')
+        ->not->toContain('HttpCheckLogsTable')
+        ->not->toContain('Pagination');
 });
 
 test('the page href composable builds page one without a query string', function () {

@@ -3,9 +3,10 @@ import { Head } from '@inertiajs/vue3';
 import HttpCheckLogsTable, {
     type HttpCheckLogRow,
 } from '@/components/HttpCheckLogsTable.vue';
+import HttpNavbar from '@/components/HttpNavbar.vue';
 import Pagination from '@/components/Pagination.vue';
 import { usePageHref } from '@/composables/usePageHref';
-import { http } from '@/routes';
+import { errors } from '@/routes/http';
 
 type PaginationMeta = {
     current_page: number;
@@ -35,19 +36,21 @@ defineOptions({
         breadcrumbs: [
             {
                 title: 'Http',
-                href: http(),
+                href: errors(),
             },
         ],
     },
 });
 
-const { pageHref } = usePageHref(http);
+const { pageHref } = usePageHref(errors);
 </script>
 
 <template>
-    <Head title="Http" />
+    <Head title="Http Errors" />
 
     <div class="flex flex-col gap-6 px-4 py-6">
+        <HttpNavbar />
+
         <HttpCheckLogsTable :logs="logs" />
 
         <Pagination

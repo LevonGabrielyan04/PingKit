@@ -23,10 +23,10 @@ test('authenticated users see only their failed http check logs as dto arrays', 
     HttpCheckLog::factory()->for($otherMonitor)->failed()->create();
 
     $this->actingAs($user)
-        ->get(route('http'))
+        ->get(route('http.errors'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Http')
+            ->component('http/Errors')
             ->has('logs', 1)
             ->where('logs.0.id', $failed->id)
             ->where('logs.0.target', $monitor->url_address)
@@ -60,10 +60,10 @@ test('authenticated users can browse failed http check logs beyond the first pag
     $newest = $logs->sortByDesc('created_at')->values();
 
     $this->actingAs($user)
-        ->get(route('http'))
+        ->get(route('http.errors'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Http')
+            ->component('http/Errors')
             ->has('logs', 15)
             ->where('logs.0.id', $newest[0]->id)
             ->where('pagination.current_page', 1)
@@ -73,10 +73,10 @@ test('authenticated users can browse failed http check logs beyond the first pag
         );
 
     $this->actingAs($user)
-        ->get(route('http', ['page' => 2]))
+        ->get(route('http.errors', ['page' => 2]))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
-            ->component('Http')
+            ->component('http/Errors')
             ->has('logs', 1)
             ->where('logs.0.id', $newest[15]->id)
             ->where('pagination.current_page', 2)
@@ -86,6 +86,6 @@ test('authenticated users can browse failed http check logs beyond the first pag
 });
 
 test('guests are redirected to the login page from the http check log controller', function () {
-    $this->get(route('http'))
+    $this->get(route('http.errors'))
         ->assertRedirect(route('login'));
 });

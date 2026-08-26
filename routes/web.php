@@ -9,7 +9,9 @@ Route::inertia('/', 'Welcome')->name('home');
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
     Route::inertia('ping', 'Ping')->name('ping');
-    Route::get('http', [HttpCheckLogController::class, 'index'])->name('http');
+    Route::redirect('http', '/http/errors');
+    Route::get('http/errors', [HttpCheckLogController::class, 'index'])->name('http.errors');
+    Route::inertia('http/analytics', 'http/Analytics')->name('http.analytics');
     Route::get('monitors', [MonitorController::class, 'index'])->name('monitors.index');
     Route::get('monitors/create', [MonitorController::class, 'create'])->name('monitors.create');
     Route::post('monitors', [MonitorController::class, 'store'])->name('monitors.store');

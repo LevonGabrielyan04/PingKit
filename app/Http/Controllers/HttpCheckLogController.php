@@ -21,7 +21,7 @@ class HttpCheckLogController extends Controller
     {
         $logs = $this->httpCheckLogs->paginateFailed($request->user());
 
-        return Inertia::render('Http', [
+        return Inertia::render('http/Errors', [
             'logs' => array_map(
                 fn (HttpCheckLogData $log): array => $log->toArray(),
                 $logs->items(),

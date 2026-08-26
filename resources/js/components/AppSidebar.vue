@@ -13,7 +13,8 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard, http, ping } from '@/routes';
+import { dashboard, ping } from '@/routes';
+import { errors as httpErrors } from '@/routes/http';
 import { index as monitors } from '@/routes/monitors';
 import type { NavItem } from '@/types';
 
@@ -30,7 +31,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Http',
-        href: http(),
+        href: httpErrors(),
         icon: Globe,
     },
     {
