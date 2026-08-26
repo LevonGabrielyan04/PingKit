@@ -109,6 +109,7 @@ test('paginateFailed returns only the users unsuccessful logs as dtos', function
 
     $failedNewer = HttpCheckLog::factory()->for($monitor)->failed(500, 'server error')->create([
         'created_at' => now()->subMinute(),
+        'response_headers' => ['x-request-id' => 'abc'],
     ]);
     $failedOlder = HttpCheckLog::factory()->for($monitor)->failed(404, 'not found')->create([
         'created_at' => now()->subHour(),
@@ -126,6 +127,7 @@ test('paginateFailed returns only the users unsuccessful logs as dtos', function
             'target' => $monitor->url_address,
             'status_code' => 500,
             'error_message' => 'server error',
+            'response_headers' => ['x-request-id' => 'abc'],
         ])
         ->and($page->items()[0]->toArray())->not->toHaveKeys(['monitor_id', 'is_successful']);
 

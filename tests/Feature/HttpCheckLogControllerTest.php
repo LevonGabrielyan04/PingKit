@@ -17,6 +17,7 @@ test('authenticated users see only their failed http check logs as dto arrays', 
         'dns_time_ms' => 5,
         'tcp_time_ms' => 10,
         'tls_time_ms' => 15,
+        'response_headers' => ['content-type' => 'text/plain'],
     ]);
     HttpCheckLog::factory()->for($monitor)->create(['status_code' => 200]);
     HttpCheckLog::factory()->for($otherMonitor)->failed()->create();
@@ -35,6 +36,7 @@ test('authenticated users see only their failed http check logs as dto arrays', 
             ->where('logs.0.tcp_time_ms', 10)
             ->where('logs.0.tls_time_ms', 15)
             ->where('logs.0.error_message', 'upstream unavailable')
+            ->where('logs.0.response_headers', ['content-type' => 'text/plain'])
             ->where('logs.0.created_at', $failed->created_at->toIso8601String())
             ->missing('logs.0.monitor_id')
             ->missing('logs.0.is_successful')

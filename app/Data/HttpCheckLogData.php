@@ -13,6 +13,9 @@ use JsonSerializable;
  */
 final readonly class HttpCheckLogData implements Arrayable, JsonSerializable
 {
+    /**
+     * @param  array<string, mixed>|null  $responseHeaders
+     */
     private function __construct(
         public string $id,
         public string $target,
@@ -23,6 +26,7 @@ final readonly class HttpCheckLogData implements Arrayable, JsonSerializable
         public ?int $tcpTimeMs,
         public ?int $tlsTimeMs,
         public ?string $errorMessage,
+        public ?array $responseHeaders,
     ) {}
 
     public static function fromModel(HttpCheckLog $log): self
@@ -37,6 +41,7 @@ final readonly class HttpCheckLogData implements Arrayable, JsonSerializable
             tcpTimeMs: $log->tcp_time_ms,
             tlsTimeMs: $log->tls_time_ms,
             errorMessage: $log->error_message,
+            responseHeaders: $log->response_headers,
         );
     }
 
@@ -51,6 +56,7 @@ final readonly class HttpCheckLogData implements Arrayable, JsonSerializable
      *     tcp_time_ms: int|null,
      *     tls_time_ms: int|null,
      *     error_message: string|null,
+     *     response_headers: array<string, mixed>|null,
      * }
      */
     public function toArray(): array
@@ -65,6 +71,7 @@ final readonly class HttpCheckLogData implements Arrayable, JsonSerializable
             'tcp_time_ms' => $this->tcpTimeMs,
             'tls_time_ms' => $this->tlsTimeMs,
             'error_message' => $this->errorMessage,
+            'response_headers' => $this->responseHeaders,
         ];
     }
 
@@ -79,6 +86,7 @@ final readonly class HttpCheckLogData implements Arrayable, JsonSerializable
      *     tcp_time_ms: int|null,
      *     tls_time_ms: int|null,
      *     error_message: string|null,
+     *     response_headers: array<string, mixed>|null,
      * }
      */
     public function jsonSerialize(): array

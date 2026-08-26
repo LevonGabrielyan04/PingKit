@@ -11,6 +11,12 @@ export type HttpCheckLogRow = {
     tcp_time_ms: number | null;
     tls_time_ms: number | null;
     error_message: string | null;
+    response_headers: Record<string, unknown> | null;
+};
+
+type SelectedResponse = {
+    errorMessage: string | null;
+    responseHeaders: Record<string, unknown> | null;
 };
 
 type Props = {
@@ -21,16 +27,16 @@ const props = withDefaults(defineProps<Props>(), {
     logs: () => [],
 });
 
-const selectedErrorMessage = ref<string | null>(null);
+const selectedResponse = ref<SelectedResponse | null>(null);
 
-watch(selectedErrorMessage, (message, _previous, onCleanup) => {
-    if (message === null) {
+watch(selectedResponse, (response, _previous, onCleanup) => {
+    if (response === null) {
         return;
     }
 
     function onKeydown(event: KeyboardEvent): void {
         if (event.key === 'Escape') {
-            closeErrorMessage();
+            closeResponse();
         }
     }
 
@@ -56,12 +62,36 @@ function formatCheckedAt(value: string): string {
     return date.toLocaleString();
 }
 
-function openErrorMessage(message: string): void {
-    selectedErrorMessage.value = message;
+function formatResponseHeaders(
+    headers: Record<string, unknown> | null,
+): string {
+    if (headers === null || Object.keys(headers).length === 0) {
+        return '—';
+    }
+
+    return JSON.stringify(headers, null, 2);
 }
 
-function closeErrorMessage(): void {
-    selectedErrorMessage.value = null;
+function hasResponseDetails(log: HttpCheckLogRow): boolean {
+    if (log.error_message) {
+        return true;
+    }
+
+    return (
+        log.response_headers !== null &&
+        Object.keys(log.response_headers).length > 0
+    );
+}
+
+function openResponse(log: HttpCheckLogRow): void {
+    selectedResponse.value = {
+        errorMessage: log.error_message,
+        responseHeaders: log.response_headers,
+    };
+}
+
+function closeResponse(): void {
+    selectedResponse.value = null;
 }
 </script>
 
@@ -88,7 +118,7 @@ function closeErrorMessage(): void {
                         <th scope="col">Checked at</th>
                         <th scope="col">Target</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Response</th>
+                        <th scope="col">Total</th>
                         <th scope="col">DNS</th>
                         <th scope="col">TCP</th>
                         <th scope="col">TLS</th>
@@ -110,13 +140,13 @@ function closeErrorMessage(): void {
                         <td>{{ formatNullableMs(log.tls_time_ms) }}</td>
                         <td>
                             <button
-                                v-if="log.error_message"
+                                v-if="hasResponseDetails(log)"
                                 type="button"
                                 class="nb-button blue"
                                 data-test="http-check-log-error-button"
-                                @click="openErrorMessage(log.error_message)"
+                                @click="openResponse(log)"
                             >
-                                Message
+                                Response
                             </button>
                             <template v-else>—</template>
                         </td>
@@ -126,10 +156,10 @@ function closeErrorMessage(): void {
         </div>
 
         <div
-            v-if="selectedErrorMessage !== null"
+            v-if="selectedResponse !== null"
             class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 p-4"
             data-test="http-check-log-error-dialog"
-            @click.self="closeErrorMessage"
+            @click.self="closeResponse"
         >
             <div
                 class="nb-dialog blue max-h-[calc(100vh-2rem)] w-full"
@@ -141,19 +171,32 @@ function closeErrorMessage(): void {
                     id="http-check-log-error-title"
                     class="nb-dialog-header shrink-0"
                 >
-                    Message
+                    Response
                 </div>
                 <div
-                    class="nb-dialog-body min-h-0 flex-1 overflow-y-auto whitespace-pre-wrap break-words"
+                    class="nb-dialog-body min-h-0 flex-1 overflow-y-auto break-words"
                 >
-                    {{ selectedErrorMessage }}
+                    <div class="flex flex-col gap-4">
+                        <section>
+                            <h3 class="mb-2 font-semibold">Message</h3>
+                            <p class="whitespace-pre-wrap">
+                                {{ selectedResponse.errorMessage ?? '—' }}
+                            </p>
+                        </section>
+                        <section>
+                            <h3 class="mb-2 font-semibold">Headers</h3>
+                            <pre
+                                class="whitespace-pre-wrap"
+                            >{{ formatResponseHeaders(selectedResponse.responseHeaders) }}</pre>
+                        </section>
+                    </div>
                 </div>
                 <div class="nb-dialog-footer shrink-0">
                     <button
                         type="button"
                         class="nb-button blue"
                         data-test="http-check-log-error-hide"
-                        @click="closeErrorMessage"
+                        @click="closeResponse"
                     >
                         Hide
                     </button>

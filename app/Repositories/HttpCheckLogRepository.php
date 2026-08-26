@@ -84,6 +84,7 @@ class HttpCheckLogRepository implements HttpCheckLogRepositoryInterface
                 'tcp_time_ms',
                 'tls_time_ms',
                 'error_message',
+                'response_headers',
             ])
             ->with('monitor:id,url_address,ip_address')
             ->where('is_successful', false)
