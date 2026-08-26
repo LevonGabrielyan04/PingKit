@@ -41,6 +41,7 @@ test('the http check logs table reflects http_check_logs fields', function () {
         ->toContain('overflow-y-auto')
         ->toContain('nb-dialog-footer')
         ->toContain('data-test="http-check-log-error-button"')
+        ->toContain('font-medium text-black underline underline-offset-2')
         ->toContain('data-test="http-check-log-error-dialog"')
         ->toContain('data-test="http-check-log-error-hide"')
         ->toContain('>Total</')

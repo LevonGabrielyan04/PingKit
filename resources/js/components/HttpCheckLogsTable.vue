@@ -139,15 +139,15 @@ function closeResponse(): void {
                         <td>{{ formatNullableMs(log.tcp_time_ms) }}</td>
                         <td>{{ formatNullableMs(log.tls_time_ms) }}</td>
                         <td>
-                            <button
+                            <a
                                 v-if="hasResponseDetails(log)"
-                                type="button"
-                                class="nb-button blue"
+                                href="#"
+                                class="font-medium text-black underline underline-offset-2"
                                 data-test="http-check-log-error-button"
-                                @click="openResponse(log)"
+                                @click.prevent="openResponse(log)"
                             >
                                 Response
-                            </button>
+                            </a>
                             <template v-else>—</template>
                         </td>
                     </tr>
