@@ -39,7 +39,7 @@ defineOptions({
 
             <Link
                 :href="create()"
-                class="nb-button orange"
+                class="nb-button blue"
                 data-test="new-monitor"
             >
                 New Monitor
@@ -60,10 +60,10 @@ defineOptions({
 
         <div
             v-else
-            class="nb-table-container orange overflow-x-auto"
+            class="nb-table-container blue overflow-x-auto"
             data-test="monitors-list"
         >
-            <table class="nb-table orange bordered">
+            <table class="nb-table blue bordered">
                 <thead>
                     <tr>
                         <th scope="col">Target</th>

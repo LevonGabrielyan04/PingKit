@@ -118,10 +118,10 @@
     --radius: 0.5rem;
     --sidebar-background: #ffffff;
     --sidebar-foreground: #000000;
-    --sidebar-primary: #ff5733;
-    --sidebar-primary-foreground: #000000;
-    --sidebar-accent: #ff5733;
-    --sidebar-accent-foreground: #000000;
+    --sidebar-primary: #0077b6;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #0077b6;
+    --sidebar-accent-foreground: #ffffff;
     --sidebar-border: #000000;
     --sidebar-ring: #000000;
     --sidebar: #ffffff;
@@ -154,10 +154,10 @@
     --chart-5: hsl(340 75% 55%);
     --sidebar-background: #111111;
     --sidebar-foreground: #ffffff;
-    --sidebar-primary: #ff5733;
-    --sidebar-primary-foreground: #000000;
-    --sidebar-accent: #ff5733;
-    --sidebar-accent-foreground: #000000;
+    --sidebar-primary: #0077b6;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #0077b6;
+    --sidebar-accent-foreground: #ffffff;
     --sidebar-border: #ffffff;
     --sidebar-ring: #ffffff;
     --sidebar: #111111;
@@ -174,12 +174,12 @@
 
 @layer utilities {
     .project-color-theme {
-        color: orange;
+        color: #0077b6;
     }
 }
 
 /*
-  App chrome NeoBrutalismCSS styling — matches Monitors (nb-card / nb-button orange).
+  App chrome NeoBrutalismCSS styling — matches Monitors (nb-card / nb-button blue).
   Unlayered so these beat Tailwind utilities on the same nodes without !important.
 */
 .nb-app-sidebar [data-sidebar="sidebar"],
@@ -246,8 +246,8 @@
 }
 
 .nb-sidebar-link[data-active="true"] {
-    background: #ff5733;
-    color: #000000;
+    background: #0077b6;
+    color: #ffffff;
     border-color: #000000;
     box-shadow: 3px 3px 0px #000000;
     font-weight: 700;
@@ -261,8 +261,8 @@
 }
 
 .dark .nb-sidebar-link[data-active="true"] {
-    background: #ff5733;
-    color: #000000;
+    background: #0077b6;
+    color: #ffffff;
     border-color: #ffffff;
     box-shadow: 3px 3px 0px #ffffff;
 }
@@ -277,8 +277,8 @@
 
 .nb-sidebar-user:hover,
 .nb-sidebar-user[data-state="open"] {
-    background: #ff5733;
-    color: #000000;
+    background: #0077b6;
+    color: #ffffff;
     box-shadow: 2px 2px 0px #000000;
     transform: translate(1px, 1px);
 }
@@ -292,8 +292,8 @@
 
 .dark .nb-sidebar-user:hover,
 .dark .nb-sidebar-user[data-state="open"] {
-    background: #ff5733;
-    color: #000000;
+    background: #0077b6;
+    color: #ffffff;
     box-shadow: 2px 2px 0px #ffffff;
 }
 
@@ -329,7 +329,8 @@
 }
 
 .nb-sidebar-trigger:hover {
-    background: #ff5733;
+    background: #0077b6;
+    color: #ffffff;
     box-shadow: 2px 2px 0px #000000;
     transform: translate(1px, 1px);
 }
@@ -342,8 +343,8 @@
 }
 
 .dark .nb-sidebar-trigger:hover {
-    background: #ff5733;
-    color: #000000;
+    background: #0077b6;
+    color: #ffffff;
     box-shadow: 2px 2px 0px #ffffff;
 }
 

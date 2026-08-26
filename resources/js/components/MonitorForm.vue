@@ -130,7 +130,7 @@ function transform(data: Record<string, unknown>) {
                     <input
                         id="monitor-url-address"
                         type="url"
-                        class="nb-input orange"
+                        class="nb-input blue"
                         name="url_address"
                         :default-value="monitor?.url_address ?? undefined"
                         placeholder="https://example.com"
@@ -148,7 +148,7 @@ function transform(data: Record<string, unknown>) {
                     <input
                         id="monitor-ip-address"
                         type="text"
-                        class="nb-input orange"
+                        class="nb-input blue"
                         name="ip_address"
                         :default-value="monitor?.ip_address ?? undefined"
                         placeholder="192.0.2.1"
@@ -162,7 +162,7 @@ function transform(data: Record<string, unknown>) {
                     <label class="nb-label">
                         <input
                             type="checkbox"
-                            class="nb-checkbox orange"
+                            class="nb-checkbox blue"
                             name="is_httpable"
                             value="1"
                             :checked="monitor?.is_httpable ?? true"
@@ -177,7 +177,7 @@ function transform(data: Record<string, unknown>) {
                     <label for="monitor-request-headers">Request headers</label>
                     <textarea
                         id="monitor-request-headers"
-                        class="nb-textarea orange min-h-24"
+                        class="nb-textarea blue min-h-24"
                         name="request_headers"
                         :default-value="requestHeadersDefault"
                         placeholder='{"User-Agent":"PingKit"}'
@@ -189,7 +189,7 @@ function transform(data: Record<string, unknown>) {
                 <div class="nb-card-actions md:col-span-2">
                     <button
                         type="submit"
-                        class="nb-button orange"
+                        class="nb-button blue"
                         :disabled="processing"
                         data-test="monitor-submit"
                     >

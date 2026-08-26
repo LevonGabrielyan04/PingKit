@@ -79,10 +79,10 @@ function closeErrorMessage(): void {
 
         <div
             v-else
-            class="nb-table-container orange overflow-x-auto"
+            class="nb-table-container blue overflow-x-auto"
             data-test="http-check-logs-list"
         >
-            <table class="nb-table orange bordered">
+            <table class="nb-table blue bordered">
                 <thead>
                     <tr>
                         <th scope="col">Checked at</th>
@@ -112,7 +112,7 @@ function closeErrorMessage(): void {
                             <button
                                 v-if="log.error_message"
                                 type="button"
-                                class="nb-button orange"
+                                class="nb-button blue"
                                 data-test="http-check-log-error-button"
                                 @click="openErrorMessage(log.error_message)"
                             >
@@ -132,7 +132,7 @@ function closeErrorMessage(): void {
             @click.self="closeErrorMessage"
         >
             <div
-                class="nb-dialog orange max-h-[calc(100vh-2rem)] w-full"
+                class="nb-dialog blue max-h-[calc(100vh-2rem)] w-full"
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="http-check-log-error-title"
@@ -151,7 +151,7 @@ function closeErrorMessage(): void {
                 <div class="nb-dialog-footer shrink-0">
                     <button
                         type="button"
-                        class="nb-button orange"
+                        class="nb-button blue"
                         data-test="http-check-log-error-hide"
                         @click="closeErrorMessage"
                     >

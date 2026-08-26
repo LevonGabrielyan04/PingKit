@@ -30,5 +30,5 @@ test('the sidebar uses NeoBrutalismCSS styling to match monitors', function () {
     expect($css)
         ->toContain('.nb-app-sidebar')
         ->toContain('.nb-sidebar-link')
-        ->toContain('#ff5733');
+        ->toContain('#0077b6');
 });

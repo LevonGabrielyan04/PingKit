@@ -22,4 +22,7 @@ When adding an element color in Vue/JS (status text, highlights, accent colors, 
 NeoBrutalismCSS `.nb-form-group label { display: block }` overrides `.nb-radio + label { display: inline-flex; align-items: center }`. Keep the unlayered fix in app.css: `.nb-form-group .nb-radio + label { display: inline-flex; align-items: center; margin-bottom: 0 }` so option text stays aligned with the fake radio circle.
 
 ## NeoBrutalism overlays use nb-dialog (no modal)
-NeoBrutalismCSS has no modal component. For overlays/pop-ups use its Dialog: a root `nb-dialog` (prefer `orange`) with `nb-dialog-header`, `nb-dialog-body`, and an `nb-dialog-footer` that contains a single Hide control (`nb-button`, prefer orange) — no other action buttons. Do not invent modal classes or reach for shadcn/reka Dialog styling on NeoBrutalism surfaces.
+NeoBrutalismCSS has no modal component. For overlays/pop-ups use its Dialog: a root `nb-dialog` (prefer `blue`) with `nb-dialog-header`, `nb-dialog-body`, and an `nb-dialog-footer` that contains a single Hide control (`nb-button`, prefer blue) — no other action buttons. Do not invent modal classes or reach for shadcn/reka Dialog styling on NeoBrutalism surfaces.
+
+## Prefer NeoBrutalism blue theme
+Project accent is NeoBrutalismCSS blue (#0077b6), not orange. Prefer the blue variant on nb-button / nb-input / nb-table / nb-dialog / etc. project-color-theme uses #0077b6. App chrome accents in app.css and AppLogo use #0077b6 with white text on filled blue surfaces.
