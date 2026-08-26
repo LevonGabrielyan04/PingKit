@@ -38,7 +38,7 @@ test('http check logs table has the expected columns and generated is_successful
         ->and($columns['tcp_time_ms']['nullable'])->toBeTrue()
         ->and($columns['tls_time_ms']['nullable'])->toBeTrue()
         ->and($columns['error_message']['nullable'])->toBeTrue()
-        ->and($columns['response_headers']['nullable'])->toBeFalse()
+        ->and($columns['response_headers']['nullable'])->toBeTrue()
         ->and($columns['request_headers']['nullable'])->toBeTrue();
 
     $primary = collect(Schema::getIndexes('http_check_logs'))->firstWhere('primary', true);
@@ -48,9 +48,10 @@ test('http check logs table has the expected columns and generated is_successful
         ->and($foreign['foreign_table'])->toBe('monitors')
         ->and($foreign['foreign_columns'])->toBe(['id'])
         ->and($foreign['on_delete'])->toBe('cascade')
-        ->and(Schema::hasIndex('http_check_logs', ['created_at', 'is_successful']))->toBeTrue()
+        ->and(Schema::hasIndex('http_check_logs', ['is_successful', 'created_at']))->toBeTrue()
         ->and(Schema::hasIndex('http_check_logs', ['monitor_id', 'created_at']))->toBeTrue()
-        ->and(Schema::hasIndex('http_check_logs', ['monitor_id', 'status_code']))->toBeTrue();
+        ->and(Schema::hasIndex('http_check_logs', ['monitor_id', 'status_code']))->toBeTrue()
+        ->and(Schema::hasIndex('http_check_logs', ['monitor_id', 'is_successful']))->toBeTrue();
 });
 
 test('monitor_id must reference a monitor', function () {

@@ -23,12 +23,13 @@ return new class extends Migration
             $table->smallInteger('tcp_time_ms')->nullable();
             $table->smallInteger('tls_time_ms')->nullable();
             $table->string('error_message')->nullable();
-            $table->json('response_headers');
+            $table->json('response_headers')->nullable();
             $table->json('request_headers')->nullable();
 
-            $table->index(['created_at', 'is_successful']);
+            $table->index(['is_successful', 'created_at']);
             $table->index(['monitor_id', 'created_at']);
             $table->index(['monitor_id', 'status_code']);
+            $table->index(['monitor_id', 'is_successful']);
         });
 
         DB::statement('alter table `http_check_logs` add constraint `http_check_logs_status_code_range` check (`status_code` between 100 and 999)');

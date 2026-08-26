@@ -21,7 +21,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $tcp_time_ms
  * @property int|null $tls_time_ms
  * @property string|null $error_message
- * @property array<string, mixed> $response_headers
+ * @property array<string, mixed>|null $response_headers
  * @property array<string, mixed>|null $request_headers
  */
 #[Fillable([
