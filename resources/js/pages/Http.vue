@@ -1,22 +1,23 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { Head } from '@inertiajs/vue3';
 import HttpCheckLogsTable, {
     type HttpCheckLogRow,
 } from '@/components/HttpCheckLogsTable.vue';
+import Pagination from '@/components/Pagination.vue';
+import { usePageHref } from '@/composables/usePageHref';
 import { http } from '@/routes';
 
-type Pagination = {
+type PaginationMeta = {
     current_page: number;
     last_page: number;
     per_page: number;
     total: number;
 };
 
-const props = withDefaults(
+withDefaults(
     defineProps<{
         logs?: HttpCheckLogRow[];
-        pagination?: Pagination;
+        pagination?: PaginationMeta;
     }>(),
     {
         logs: () => [],
@@ -40,21 +41,7 @@ defineOptions({
     },
 });
 
-const hasPages = computed(() => props.pagination.last_page > 1);
-
-const previousPageHref = computed(() => {
-    const page = props.pagination.current_page - 1;
-
-    if (page <= 1) {
-        return http();
-    }
-
-    return http({ query: { page } });
-});
-
-const nextPageHref = computed(() =>
-    http({ query: { page: props.pagination.current_page + 1 } }),
-);
+const { pageHref } = usePageHref(http);
 </script>
 
 <template>
@@ -63,53 +50,12 @@ const nextPageHref = computed(() =>
     <div class="flex flex-col gap-6 px-4 py-6">
         <HttpCheckLogsTable :logs="logs" />
 
-        <nav
-            v-if="hasPages"
-            class="flex flex-wrap items-center justify-between gap-4"
+        <Pagination
+            :current-page="pagination.current_page"
+            :last-page="pagination.last_page"
+            :page-href="pageHref"
             aria-label="HTTP check logs pagination"
-            data-test="http-check-logs-pagination"
-        >
-            <Link
-                v-if="pagination.current_page > 1"
-                :href="previousPageHref"
-                class="nb-button blue"
-                data-test="http-check-logs-prev"
-            >
-                Previous
-            </Link>
-            <span
-                v-else
-                class="nb-button blue disabled"
-                aria-disabled="true"
-                data-test="http-check-logs-prev"
-            >
-                Previous
-            </span>
-
-            <p
-                class="text-sm font-medium"
-                data-test="http-check-logs-page-status"
-            >
-                Page {{ pagination.current_page }} of
-                {{ pagination.last_page }}
-            </p>
-
-            <Link
-                v-if="pagination.current_page < pagination.last_page"
-                :href="nextPageHref"
-                class="nb-button blue"
-                data-test="http-check-logs-next"
-            >
-                Next
-            </Link>
-            <span
-                v-else
-                class="nb-button blue disabled"
-                aria-disabled="true"
-                data-test="http-check-logs-next"
-            >
-                Next
-            </span>
-        </nav>
+            test-id="http-check-logs"
+        />
     </div>
 </template>

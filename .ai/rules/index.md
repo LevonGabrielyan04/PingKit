@@ -5,11 +5,12 @@ Before planning or editing, find the row whose globs match the file's path and r
 | Applies to | Rule file |
 | --- | --- |
 | resources/js/components/MonitorForm.vue, resources/js/components/{AppSidebar,NavMain,NavUser,AppLogo,AppSidebarHeader,Breadcrumbs}.vue | .ai/rules/components.md |
+| resources/js/composables/usePageHref.ts | .ai/rules/composables.md |
 | app/Http/Controllers/MonitorController.php, app/Http/Controllers/HttpCheckLogController.php | .ai/rules/controllers.md |
 | app/Data/**/*.php | .ai/rules/data.md |
 | phpunit.xml | .ai/rules/general.md |
 | app/Jobs/**/*.php, app/Jobs/PruneHttpCheckLogs.php | .ai/rules/jobs.md |
-| resources/js/pages/Http.vue, resources/js/components/HttpCheckLogsTable.vue | .ai/rules/js-components.md |
+| resources/js/pages/Http.vue, resources/js/components/HttpCheckLogsTable.vue, resources/js/components/Pagination.vue | .ai/rules/js-components.md |
 | resources/js/**/*.{ts,vue}, resources/js/**/*, resources/css/app.css, vite.config.ts, resources/js/**/*.{vue,ts} | .ai/rules/js.md |
 | app/Listeners/**/*.php | .ai/rules/listeners.md |
 | database/migrations/** | .ai/rules/migrations.md |

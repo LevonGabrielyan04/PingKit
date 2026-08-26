@@ -7,13 +7,42 @@ test('the http page includes the http check logs table', function () {
         ->toContain('Head title="Http"')
         ->toContain('HttpCheckLogsTable')
         ->toContain(':logs="logs"')
-        ->toContain('data-test="http-check-logs-pagination"')
-        ->toContain('data-test="http-check-logs-prev"')
-        ->toContain('data-test="http-check-logs-next"')
-        ->toContain('data-test="http-check-logs-page-status"')
+        ->toContain('Pagination')
+        ->toContain(':current-page="pagination.current_page"')
+        ->toContain(':last-page="pagination.last_page"')
+        ->toContain(':page-href="pageHref"')
+        ->toContain('test-id="http-check-logs"')
+        ->toContain('usePageHref')
+        ->toContain('usePageHref(http)')
+        ->not->toContain('data-test="http-check-logs-page-status"');
+});
+
+test('the page href composable builds page one without a query string', function () {
+    $composable = file_get_contents(dirname(__DIR__, 2).'/resources/js/composables/usePageHref.ts');
+
+    expect($composable)
+        ->toContain('export function usePageHref')
+        ->toContain('page <= 1')
+        ->toContain('route()')
+        ->toContain('route({ query: { page } })');
+});
+
+test('the pagination component renders previous next and numbered links', function () {
+    $component = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/Pagination.vue');
+
+    expect($component)
+        ->toContain('pageNumberItems')
+        ->toContain('aria-current="page"')
         ->toContain('Previous')
         ->toContain('Next')
-        ->toContain('http({ query: { page } })');
+        ->toContain('`${testId}-pagination`')
+        ->toContain('`${testId}-prev`')
+        ->toContain('`${testId}-next`')
+        ->toContain('`${testId}-page-numbers`')
+        ->toContain('`${testId}-page-ellipsis`')
+        ->toContain('`${testId}-page-${item.page}`')
+        ->toContain('preserve-scroll')
+        ->toContain('nb-button blue');
 });
 
 test('the http check logs table reflects http_check_logs fields', function () {
