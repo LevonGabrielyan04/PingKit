@@ -32,3 +32,9 @@ Successful logs older than 48 hours and all logs older than one month are delete
 
 ## paginateFailed returns user-scoped DTOs
 HttpCheckLogRepositoryInterface::paginateFailed(User, perPage) returns a LengthAwarePaginator of HttpCheckLogData for is_successful=false logs belonging to the user's monitors (whereHas monitor.user_id). Select DTO columns plus monitor_id (including response_headers; exclude request_headers), eager-load monitor:id,url_address,ip_address. Map via HttpCheckLogData::fromModel().
+
+## exportFailedQuery for CSV export
+HttpCheckLogRepositoryInterface::exportFailedQuery(User) returns the same user/failed scope as paginateFailed but as a Builder for CsvExportService. Includes target via selectSub COALESCE(url_address, ip_address); no join (chunkById-safe).
+
+## exportFailedQuery for CSV export
+HttpCheckLogRepositoryInterface::exportFailedQuery(User) returns a Builder scoped like paginateFailed (user monitors, is_successful=false, latest created_at). Adds target via selectSub COALESCE(url_address, ip_address) so CsvExportService chunkById works without joins.

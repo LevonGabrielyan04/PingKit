@@ -1,18 +1,9 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { computed } from 'vue';
-import { useCurrentUrl } from '@/composables/useCurrentUrl';
-import { analytics, errors } from '@/routes/http';
+import { errors } from '@/routes/http';
 
-const { isCurrentUrl } = useCurrentUrl();
-
-const title = computed(() => (isCurrentUrl(errors()) ? 'Errors' : 'Analytics'));
-
-const description = computed(() =>
-    isCurrentUrl(errors())
-        ? 'Failed HTTP checks for your monitors.'
-        : 'Insights and trends for your HTTP monitors.',
-);
+const title = 'Errors';
+const description = 'Failed HTTP checks for your monitors.';
 </script>
 
 <template>
@@ -28,22 +19,20 @@ const description = computed(() =>
             <li class="nb-navbar-item">
                 <Link
                     :href="errors()"
-                    class="nb-button"
-                    :class="isCurrentUrl(errors()) ? 'blue' : 'default'"
+                    class="nb-button blue"
                     data-test="http-nav-errors"
                 >
                     Errors
                 </Link>
             </li>
             <li class="nb-navbar-item">
-                <Link
-                    :href="analytics()"
-                    class="nb-button"
-                    :class="isCurrentUrl(analytics()) ? 'blue' : 'default'"
-                    data-test="http-nav-analytics"
+                <a
+                    :href="errors.export.url()"
+                    class="nb-button default"
+                    data-test="http-nav-download-excel"
                 >
-                    Analytics
-                </Link>
+                    Download Excel
+                </a>
             </li>
         </ul>
     </nav>

@@ -1,6 +1,6 @@
 <?php
 
-test('the http navbar uses neobrutalism css with errors and analytics buttons', function () {
+test('the http navbar uses neobrutalism css with errors and download excel buttons', function () {
     $navbar = file_get_contents(dirname(__DIR__, 2).'/resources/js/components/HttpNavbar.vue');
 
     expect($navbar)
@@ -10,14 +10,15 @@ test('the http navbar uses neobrutalism css with errors and analytics buttons', 
         ->toContain('ml-auto')
         ->toContain('nb-button')
         ->toContain('Errors')
-        ->toContain('Analytics')
+        ->toContain('Download Excel')
         ->toContain('data-test="http-navbar"')
         ->toContain('data-test="http-nav-explainer"')
         ->toContain('data-test="http-nav-errors"')
-        ->toContain('data-test="http-nav-analytics"')
+        ->toContain('data-test="http-nav-download-excel"')
         ->toContain("from '@/routes/http'")
         ->toContain('errors()')
-        ->toContain('analytics()')
-        ->toContain('useCurrentUrl')
+        ->toContain('errors.export.url()')
+        ->not->toContain('Analytics')
+        ->not->toContain('analytics()')
         ->not->toContain("from '@/routes'");
 });

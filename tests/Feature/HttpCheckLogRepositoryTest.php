@@ -138,6 +138,37 @@ test('paginateFailed returns only the users unsuccessful logs as dtos', function
     expect($secondPage->items()[0]->id)->toBe($failedOlder->id);
 });
 
+test('exportFailedQuery returns only the users unsuccessful logs with target subquery', function () {
+    $user = User::factory()->create();
+    $otherUser = User::factory()->create();
+
+    $urlMonitor = Monitor::factory()->for($user)->create([
+        'url_address' => 'https://example.com',
+        'ip_address' => null,
+    ]);
+    $ipMonitor = Monitor::factory()->for($user)->ipAddress('192.0.2.10')->create();
+    $otherMonitor = Monitor::factory()->for($otherUser)->create();
+
+    HttpCheckLog::factory()->for($urlMonitor)->failed(500, 'server error')->create([
+        'created_at' => now()->subMinute(),
+    ]);
+    HttpCheckLog::factory()->for($ipMonitor)->failed(404, 'not found')->create([
+        'created_at' => now()->subHour(),
+    ]);
+    HttpCheckLog::factory()->for($urlMonitor)->create(['status_code' => 200]);
+    HttpCheckLog::factory()->for($otherMonitor)->failed()->create();
+
+    $logs = app(HttpCheckLogRepositoryInterface::class)
+        ->exportFailedQuery($user)
+        ->get();
+
+    expect($logs)->toHaveCount(2)
+        ->and($logs[0]->target)->toBe('https://example.com')
+        ->and($logs[0]->status_code)->toBe(500)
+        ->and($logs[1]->target)->toBe('192.0.2.10')
+        ->and($logs[1]->status_code)->toBe(404);
+});
+
 test('paginateFailed target prefers url_address and falls back to ip_address', function () {
     $user = User::factory()->create();
     $urlMonitor = Monitor::factory()->for($user)->create([

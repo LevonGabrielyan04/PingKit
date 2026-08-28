@@ -18,16 +18,6 @@ test('the http errors page includes the http check logs table', function () {
         ->not->toContain('data-test="http-check-logs-page-status"');
 });
 
-test('the http analytics page is empty besides the navbar', function () {
-    $page = file_get_contents(dirname(__DIR__, 2).'/resources/js/pages/http/Analytics.vue');
-
-    expect($page)
-        ->toContain('Head title="Http Analytics"')
-        ->toContain('HttpNavbar')
-        ->not->toContain('HttpCheckLogsTable')
-        ->not->toContain('Pagination');
-});
-
 test('the page href composable builds page one without a query string', function () {
     $composable = file_get_contents(dirname(__DIR__, 2).'/resources/js/composables/usePageHref.ts');
 

@@ -8,6 +8,7 @@ use App\Contracts\HttpCheckLogRepositoryInterface;
 use App\Data\HttpCheckLogData;
 use App\Data\HttpCheckResult;
 use App\Models\HttpCheckLog;
+use App\Models\Monitor;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -95,6 +96,37 @@ class HttpCheckLogRepository implements HttpCheckLogRepositoryInterface
             ->latest('created_at')
             ->paginate($perPage)
             ->through(fn (HttpCheckLog $log): HttpCheckLogData => HttpCheckLogData::fromModel($log));
+    }
+
+    /**
+     * @return Builder<HttpCheckLog>
+     */
+    public function exportFailedQuery(User $user): Builder
+    {
+        return HttpCheckLog::query()
+            ->select([
+                'http_check_logs.id',
+                'http_check_logs.created_at',
+                'http_check_logs.status_code',
+                'http_check_logs.response_time_ms',
+                'http_check_logs.dns_time_ms',
+                'http_check_logs.tcp_time_ms',
+                'http_check_logs.tls_time_ms',
+                'http_check_logs.error_message',
+                'http_check_logs.response_headers',
+            ])
+            ->selectSub(
+                Monitor::query()
+                    ->selectRaw('COALESCE(url_address, ip_address)')
+                    ->whereColumn('monitors.id', 'http_check_logs.monitor_id'),
+                'target',
+            )
+            ->where('is_successful', false)
+            ->whereHas(
+                'monitor',
+                fn (Builder $query): Builder => $query->where('user_id', $user->id),
+            )
+            ->latest('created_at');
     }
 
     /**

@@ -3,7 +3,6 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Pulse\Support\PulseMigration;
-use RuntimeException;
 
 return new class extends PulseMigration
 {
