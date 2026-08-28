@@ -85,7 +85,7 @@ test('authenticated users can browse failed http check logs beyond the first pag
         );
 });
 
-test('guests are redirected to the login page from the error logs controller', function () {
+test('guests are redirected to the login page from the http check log controller', function () {
     $this->get(route('http.errors'))
         ->assertRedirect(route('login'));
 });

@@ -7,7 +7,7 @@ Before planning or editing, find the row whose globs match the file's path and r
 | resources/js/components/MonitorForm.vue, resources/js/components/{AppSidebar,NavMain,NavUser,AppLogo,AppSidebarHeader,Breadcrumbs}.vue, resources/js/components/HttpNavbar.vue | .ai/rules/components.md |
 | resources/js/composables/usePageHref.ts | .ai/rules/composables.md |
 | config/cache.php, config/pulse.php | .ai/rules/config.md |
-| app/Http/Controllers/MonitorController.php, app/Http/Controllers/ErrorLogsController.php, app/Http/Controllers/AnalyticsController.php | .ai/rules/controllers.md |
+| app/Http/Controllers/MonitorController.php, app/Http/Controllers/HttpCheckLogController.php | .ai/rules/controllers.md |
 | app/Data/**/*.php | .ai/rules/data.md |
 | phpunit.xml | .ai/rules/general.md |
 | resources/js/pages/http/**/*.vue, resources/js/components/HttpNavbar.vue | .ai/rules/http-js-components.md |

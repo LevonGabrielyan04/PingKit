@@ -1,8 +1,7 @@
 ---
 paths:
   - app/Http/Controllers/MonitorController.php
-  - app/Http/Controllers/ErrorLogsController.php
-  - app/Http/Controllers/AnalyticsController.php
+  - app/Http/Controllers/HttpCheckLogController.php
 ---
 
 # Controllers
@@ -10,14 +9,11 @@ paths:
 ## Inject MonitorRepositoryInterface, not concrete
 Type-hint App\Contracts\MonitorRepositoryInterface in controllers, not the concrete MonitorRepository. Binding lives in AppServiceProvider::register().
 
-## Http errors page served by ErrorLogsController
-GET /http/errors is ErrorLogsController@index (not Route::inertia). GET /http redirects to /http/errors. Inject HttpCheckLogRepositoryInterface, call paginateFailed($request->user()), pass logs as an array of HttpCheckLogData->toArray() to Inertia http/Errors.
-
-## Http analytics page served by AnalyticsController
-GET /http/analytics is AnalyticsController@index (not Route::inertia). For now it duplicates ErrorLogsController data into http/Analytics; expect AnalyticsController to diverge later.
+## Http page served by HttpCheckLogController
+GET /http/errors is HttpCheckLogController@index (not Route::inertia). GET /http redirects to /http/errors. Inject HttpCheckLogRepositoryInterface, call paginateFailed($request->user()), pass logs as an array of HttpCheckLogData->toArray() to Inertia http/Errors.
 
 ## Http page passes pagination meta
-ErrorLogsController@index and AnalyticsController@index pass logs as HttpCheckLogData->toArray() items, plus a pagination prop: current_page, last_page, per_page, total from paginateFailed(). Do not drop pagination when changing the Http Inertia payload.
+HttpCheckLogController@index still passes logs as HttpCheckLogData->toArray() items, plus a pagination prop: current_page, last_page, per_page, total from paginateFailed(). Do not drop pagination when changing the Http Inertia payload.
 
 ## MonitorController auth via HasMiddleware
 MonitorController implements HasMiddleware and maps can middleware to MonitorPolicy (viewAny→index, view→edit, delete→destroy). Do not call Gate::authorize in action methods. create/update stay on Form Requests.
