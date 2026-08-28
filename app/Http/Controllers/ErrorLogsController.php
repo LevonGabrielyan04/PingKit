@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class HttpCheckLogController extends Controller
+class ErrorLogsController extends Controller
 {
     public function __construct(private HttpCheckLogRepositoryInterface $httpCheckLogs) {}
 

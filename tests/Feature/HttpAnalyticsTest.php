@@ -16,5 +16,10 @@ test('authenticated users can visit the http analytics page', function () {
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('http/Analytics')
+            ->has('logs', 0)
+            ->where('pagination.current_page', 1)
+            ->where('pagination.last_page', 1)
+            ->where('pagination.per_page', 15)
+            ->where('pagination.total', 0)
         );
 });
